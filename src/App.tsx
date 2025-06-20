@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Heart, Sparkles } from 'lucide-react';
+import { Heart, Sparkles, Gift } from 'lucide-react';
 
 function App() {
   const [stage, setStage] = useState<'countdown' | 'spotlight' | 'curtains' | 'reveal'>('countdown');
@@ -10,7 +10,8 @@ function App() {
   const [showSecondSpeech, setShowSecondSpeech] = useState(false);
   const [showRibbonButton, setShowRibbonButton] = useState(false);
   const [curtainOpen, setCurtainOpen] = useState(false);
-  const [showBirthdayCard, setShowBirthdayCard] = useState(false);
+  const [showGiftDialog, setShowGiftDialog] = useState(false);
+  const [showGiftBox, setShowGiftBox] = useState(false);
 
   // Audio refs
   const countdownAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -115,19 +116,24 @@ function App() {
       });
     }
     
-    // Wait for curtain animation to complete before showing birthday card
+    // Wait for curtain animation to complete before showing night sky
     setTimeout(() => {
       setStage('reveal');
-      // Show birthday card with delay for dramatic effect
+      // Show gift dialog after a moment
       setTimeout(() => {
-        setShowBirthdayCard(true);
-        // Play birthday music
-        if (birthdayMusicRef.current) {
-          birthdayMusicRef.current.play().catch(() => {
-            console.log('Audio play failed');
-          });
-        }
-      }, 500);
+        setShowGiftDialog(true);
+        // Show gift box after dialog
+        setTimeout(() => {
+          setShowGiftDialog(false);
+          setShowGiftBox(true);
+          // Play birthday music
+          if (birthdayMusicRef.current) {
+            birthdayMusicRef.current.play().catch(() => {
+              console.log('Audio play failed');
+            });
+          }
+        }, 4000);
+      }, 1000);
     }, 2000);
   };
 
@@ -156,6 +162,10 @@ function App() {
               <div className="countdown-number">
                 {countdown || '✨'}
               </div>
+            </div>
+            {/* Countdown text */}
+            <div className="countdown-text">
+              Abb Ayega Maja !!!
             </div>
             {/* Musical notes animation during countdown */}
             <div className="musical-notes">
@@ -225,19 +235,38 @@ function App() {
       {/* Curtains Stage - Lights on with curtains */}
       {(stage === 'curtains' || stage === 'reveal') && (
         <>
-          {/* Stage background with lights on */}
-          <div className="stage-background lights-on">
-            <div className="stage-floor"></div>
+          {/* Stage background with lights on or night sky */}
+          <div className={`stage-background ${stage === 'reveal' ? 'night-sky' : 'lights-on'}`}>
+            {stage === 'reveal' && (
+              <>
+                {/* Night sky with stars */}
+                <div className="stars">
+                  {[...Array(100)].map((_, i) => (
+                    <div key={i} className={`star star-${i % 5}`}></div>
+                  ))}
+                </div>
+                {/* Meteors */}
+                <div className="meteors">
+                  {[...Array(8)].map((_, i) => (
+                    <div key={i} className={`meteor meteor-${i}`}></div>
+                  ))}
+                </div>
+              </>
+            )}
             
-            {/* Spotlight effect - dimmed */}
-            <div className="spotlight-container">
-              <div className="spotlight dimmed"></div>
-              <div className="spotlight-particles">
-                {[...Array(12)].map((_, i) => (
-                  <div key={i} className={`particle particle-${i}`}></div>
-                ))}
+            {stage === 'curtains' && <div className="stage-floor"></div>}
+            
+            {/* Spotlight effect - dimmed for curtains stage */}
+            {stage === 'curtains' && (
+              <div className="spotlight-container">
+                <div className="spotlight dimmed"></div>
+                <div className="spotlight-particles">
+                  {[...Array(12)].map((_, i) => (
+                    <div key={i} className={`particle particle-${i}`}></div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Curtains */}
             {showCurtains && (
@@ -249,7 +278,7 @@ function App() {
           </div>
 
           {/* Rat Character - stays visible in both curtains and reveal stages */}
-          <div className={`rat-container ${stage === 'reveal' ? 'rat-moved-up' : ''}`}>
+          <div className={`rat-container ${stage === 'reveal' ? 'rat-reveal-position' : ''}`}>
             <img 
               src="/24889b63-2a23-4c1d-bdeb-c6bc764031e5.png" 
               alt="Cute rat character" 
@@ -270,8 +299,20 @@ function App() {
               <div className="speech-bubble">
                 <div className="speech-content">
                   <Sparkles className="speech-icon" />
-                  <p>Oyee ....Isse open toh ker</p>
-                  <p>Surprise dekhna hai na? 🎁</p>
+                  <p>Oyee isse Open kerke dekh ....</p>
+                  <p>kya attitude dikha rhi !!!!</p>
+                </div>
+                <div className="speech-tail"></div>
+              </div>
+            )}
+
+            {/* Gift dialog - only in reveal stage */}
+            {stage === 'reveal' && showGiftDialog && (
+              <div className="speech-bubble gift-dialog">
+                <div className="speech-content">
+                  <Gift className="speech-icon" />
+                  <p>Itni Mahangi Gift ....</p>
+                  <p>Tere jaise bhukkad ke liye</p>
                 </div>
                 <div className="speech-tail"></div>
               </div>
@@ -290,34 +331,25 @@ function App() {
             </div>
           )}
 
-          {/* Birthday Card Reveal - only in reveal stage */}
-          {stage === 'reveal' && showBirthdayCard && (
-            <div className="birthday-card">
-              <div className="card-content">
-                <h1 className="rainbow-text">
-                  🎊 HAPPY BIRTHDAY! 🎊
-                </h1>
-                <div className="birthday-message">
-                  <p className="message-line message-line-1">
-                    <Heart className="inline mr-2 text-pink-400" />
-                    May your special day be filled with wonder, laughter, and all the magic life has to offer!
-                  </p>
-                  <p className="message-line message-line-2">
-                    Here's to another year of adventures, dreams coming true, and moments that make your heart sing! 
-                  </p>
-                  <p className="signature message-line message-line-3">
-                    🌟 With love and birthday wishes 🌟
-                  </p>
+          {/* Gift Box - only in reveal stage */}
+          {stage === 'reveal' && showGiftBox && (
+            <div className="gift-box-container">
+              <div className="gift-box">
+                <div className="gift-box-body">
+                  <div className="gift-ribbon-horizontal"></div>
+                  <div className="gift-ribbon-vertical"></div>
+                  <div className="gift-bow">
+                    <div className="bow-left"></div>
+                    <div className="bow-right"></div>
+                    <div className="bow-center"></div>
+                  </div>
                 </div>
                 
-                {/* Floating birthday elements */}
-                <div className="floating-elements">
-                  <div className="floating-balloon balloon-1">🎈</div>
-                  <div className="floating-balloon balloon-2">🎈</div>
-                  <div className="floating-balloon balloon-3">🎈</div>
-                  <div className="floating-confetti confetti-1">🎊</div>
-                  <div className="floating-confetti confetti-2">🎉</div>
-                  <div className="floating-confetti confetti-3">🎊</div>
+                {/* Gift sparkles */}
+                <div className="gift-sparkles">
+                  {[...Array(12)].map((_, i) => (
+                    <div key={i} className={`gift-sparkle gift-sparkle-${i}`}>✨</div>
+                  ))}
                 </div>
               </div>
             </div>
