@@ -12,6 +12,9 @@ function App() {
   const [curtainOpen, setCurtainOpen] = useState(false);
   const [showGiftDialog, setShowGiftDialog] = useState(false);
   const [showGiftBox, setShowGiftBox] = useState(false);
+  const [showClickHint, setShowClickHint] = useState(false);
+  const [giftOpened, setGiftOpened] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // Audio refs
   const countdownAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -122,10 +125,14 @@ function App() {
       // Show gift dialog after a moment
       setTimeout(() => {
         setShowGiftDialog(true);
-        // Show gift box after dialog
+        // Show gift box falling from sky after dialog
         setTimeout(() => {
           setShowGiftDialog(false);
           setShowGiftBox(true);
+          // Show click hint after gift box lands
+          setTimeout(() => {
+            setShowClickHint(true);
+          }, 3000);
           // Play birthday music
           if (birthdayMusicRef.current) {
             birthdayMusicRef.current.play().catch(() => {
@@ -135,6 +142,19 @@ function App() {
         }, 4000);
       }, 1000);
     }, 2000);
+  };
+
+  const handleGiftClick = () => {
+    if (!giftOpened) {
+      setGiftOpened(true);
+      setShowClickHint(false);
+      setShowConfetti(true);
+      
+      // Hide confetti after animation
+      setTimeout(() => {
+        setShowConfetti(false);
+      }, 5000);
+    }
   };
 
   // Enable audio on first user interaction
@@ -235,7 +255,7 @@ function App() {
       {/* Curtains Stage - Lights on with curtains */}
       {(stage === 'curtains' || stage === 'reveal') && (
         <>
-          {/* Stage background with lights on or night sky */}
+          {/* Stage background - Night sky for reveal, lights on for curtains */}
           <div className={`stage-background ${stage === 'reveal' ? 'night-sky' : 'lights-on'}`}>
             {stage === 'reveal' && (
               <>
@@ -278,7 +298,7 @@ function App() {
           </div>
 
           {/* Rat Character - stays visible in both curtains and reveal stages */}
-          <div className={`rat-container ${stage === 'reveal' ? 'rat-reveal-position' : ''}`}>
+          <div className={`rat-container ${stage === 'reveal' ? 'rat-reveal-position' : ''} ${stage === 'curtains' && (showSecondSpeech || showRibbonButton) ? 'rat-curtain-position' : ''}`}>
             <img 
               src="/24889b63-2a23-4c1d-bdeb-c6bc764031e5.png" 
               alt="Cute rat character" 
@@ -334,24 +354,56 @@ function App() {
           {/* Gift Box - only in reveal stage */}
           {stage === 'reveal' && showGiftBox && (
             <div className="gift-box-container">
-              <div className="gift-box">
-                <div className="gift-box-body">
-                  <div className="gift-ribbon-horizontal"></div>
-                  <div className="gift-ribbon-vertical"></div>
-                  <div className="gift-bow">
-                    <div className="bow-left"></div>
-                    <div className="bow-right"></div>
-                    <div className="bow-center"></div>
+              <div 
+                className={`gift-box ${giftOpened ? 'gift-opened' : ''}`}
+                onClick={handleGiftClick}
+              >
+                {!giftOpened ? (
+                  <>
+                    <div className="gift-box-body">
+                      <div className="gift-ribbon-horizontal"></div>
+                      <div className="gift-ribbon-vertical"></div>
+                      <div className="gift-bow">
+                        <div className="bow-left"></div>
+                        <div className="bow-right"></div>
+                        <div className="bow-center"></div>
+                      </div>
+                    </div>
+                    
+                    {/* Gift sparkles */}
+                    <div className="gift-sparkles">
+                      {[...Array(12)].map((_, i) => (
+                        <div key={i} className={`gift-sparkle gift-sparkle-${i}`}>✨</div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <div className="gift-contents">
+                    <div className="birthday-cake">🎂</div>
+                    <div className="balloons">
+                      <div className="balloon balloon-1">🎈</div>
+                      <div className="balloon balloon-2">🎈</div>
+                      <div className="balloon balloon-3">🎈</div>
+                    </div>
                   </div>
-                </div>
-                
-                {/* Gift sparkles */}
-                <div className="gift-sparkles">
-                  {[...Array(12)].map((_, i) => (
-                    <div key={i} className={`gift-sparkle gift-sparkle-${i}`}>✨</div>
-                  ))}
-                </div>
+                )}
               </div>
+              
+              {/* Click hint */}
+              {showClickHint && !giftOpened && (
+                <div className="click-hint">
+                  <p>Click on the gift box! 🎁</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Confetti */}
+          {showConfetti && (
+            <div className="confetti-container">
+              {[...Array(50)].map((_, i) => (
+                <div key={i} className={`confetti confetti-${i % 6}`}></div>
+              ))}
             </div>
           )}
         </>
