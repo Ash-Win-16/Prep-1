@@ -15,6 +15,7 @@ function App() {
   const [showClickHint, setShowClickHint] = useState(false);
   const [giftOpened, setGiftOpened] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showBalloons, setShowBalloons] = useState(false);
 
   // Audio refs
   const countdownAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -150,10 +151,19 @@ function App() {
       setShowClickHint(false);
       setShowConfetti(true);
       
-      // Hide confetti after animation
+      // Show balloons after confetti starts
+      setTimeout(() => {
+        setShowBalloons(true);
+      }, 500);
+      
+      // Hide confetti and balloons after animation
       setTimeout(() => {
         setShowConfetti(false);
       }, 5000);
+      
+      setTimeout(() => {
+        setShowBalloons(false);
+      }, 8000);
     }
   };
 
@@ -380,10 +390,10 @@ function App() {
                 ) : (
                   <div className="gift-contents">
                     <div className="birthday-cake">🎂</div>
-                    <div className="balloons">
-                      <div className="balloon balloon-1">🎈</div>
-                      <div className="balloon balloon-2">🎈</div>
-                      <div className="balloon balloon-3">🎈</div>
+                    <div className="balloons-small">
+                      <div className="balloon-small balloon-small-1">🎈</div>
+                      <div className="balloon-small balloon-small-2">🎈</div>
+                      <div className="balloon-small balloon-small-3">🎈</div>
                     </div>
                   </div>
                 )}
@@ -401,9 +411,30 @@ function App() {
           {/* Confetti */}
           {showConfetti && (
             <div className="confetti-container">
-              {[...Array(50)].map((_, i) => (
+              {[...Array(100)].map((_, i) => (
                 <div key={i} className={`confetti confetti-${i % 6}`}></div>
               ))}
+            </div>
+          )}
+
+          {/* Floating Balloons with Messages */}
+          {showBalloons && (
+            <div className="floating-balloons-container">
+              <div className="floating-balloon balloon-message-1">
+                <div className="balloon-body" style={{backgroundColor: '#ff9999'}}>😊</div>
+                <div className="balloon-ribbon"></div>
+                <div className="balloon-message">Areee Smile Toh De! 😄</div>
+              </div>
+              <div className="floating-balloon balloon-message-2">
+                <div className="balloon-body" style={{backgroundColor: '#99ccff'}}>🐭</div>
+                <div className="balloon-ribbon"></div>
+                <div className="balloon-message">Chuiyaa spotted!</div>
+              </div>
+              <div className="floating-balloon balloon-message-3">
+                <div className="balloon-body" style={{backgroundColor: '#baffc9'}}>🎂</div>
+                <div className="balloon-ribbon"></div>
+                <div className="balloon-message">Cake lover spotted!</div>
+              </div>
             </div>
           )}
         </>
