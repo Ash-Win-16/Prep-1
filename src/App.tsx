@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Heart, Sparkles, Gift } from 'lucide-react';
 
 function App() {
-  const [stage, setStage] = useState<'countdown' | 'spotlight' | 'curtains' | 'reveal'>('countdown');
+  const [stage, setStage] = useState<'countdown' | 'spotlight' | 'curtains' | 'reveal' | 'birthday'>('countdown');
   const [countdown, setCountdown] = useState(5);
   const [showRat, setShowRat] = useState(false);
   const [showSpeechBubble, setShowSpeechBubble] = useState(false);
@@ -16,6 +16,7 @@ function App() {
   const [giftOpened, setGiftOpened] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showBalloons, setShowBalloons] = useState(false);
+  const [showBirthdayBanner, setShowBirthdayBanner] = useState(false);
 
   // Audio refs
   const countdownAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -149,21 +150,32 @@ function App() {
     if (!giftOpened) {
       setGiftOpened(true);
       setShowClickHint(false);
-      setShowConfetti(true);
       
-      // Show balloons after confetti starts
+      // Transform to birthday scene
       setTimeout(() => {
-        setShowBalloons(true);
-      }, 500);
-      
-      // Hide confetti and balloons after animation
-      setTimeout(() => {
-        setShowConfetti(false);
-      }, 5000);
-      
-      setTimeout(() => {
-        setShowBalloons(false);
-      }, 8000);
+        setStage('birthday');
+        setShowBirthdayBanner(true);
+        setShowConfetti(true);
+        
+        // Show balloons after confetti starts
+        setTimeout(() => {
+          setShowBalloons(true);
+        }, 500);
+        
+        // Hide confetti and balloons after animation
+        setTimeout(() => {
+          setShowConfetti(false);
+        }, 8000);
+        
+        setTimeout(() => {
+          setShowBalloons(false);
+        }, 12000);
+        
+        // Hide banner after celebration
+        setTimeout(() => {
+          setShowBirthdayBanner(false);
+        }, 15000);
+      }, 1000);
     }
   };
 
@@ -177,11 +189,60 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-black" onClick={enableAudio}>
+    <div className={`min-h-screen relative overflow-hidden ${stage === 'birthday' ? 'birthday-background' : 'bg-black'}`} onClick={enableAudio}>
       {/* Film grain overlay */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div className="film-grain"></div>
       </div>
+
+      {/* Birthday Background Elements - Only visible in birthday stage */}
+      {stage === 'birthday' && (
+        <>
+          {/* Birthday Background Decorations */}
+          <div className="birthday-decorations">
+            {/* Party Streamers */}
+            <div className="streamers">
+              {[...Array(12)].map((_, i) => (
+                <div key={i} className={`streamer streamer-${i}`}></div>
+              ))}
+            </div>
+            
+            {/* Floating Hearts */}
+            <div className="floating-hearts">
+              {[...Array(20)].map((_, i) => (
+                <div key={i} className={`floating-heart floating-heart-${i}`}>💖</div>
+              ))}
+            </div>
+            
+            {/* Birthday Sparkles */}
+            <div className="birthday-sparkles">
+              {[...Array(30)].map((_, i) => (
+                <div key={i} className={`birthday-sparkle birthday-sparkle-${i}`}>✨</div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Happy Birthday Banner - Only in birthday stage */}
+      {stage === 'birthday' && showBirthdayBanner && (
+        <div className="birthday-banner-container">
+          <div className="birthday-banner">
+            <div className="banner-text">
+              <span className="banner-word banner-word-1">🎉</span>
+              <span className="banner-word banner-word-2">Happy</span>
+              <span className="banner-word banner-word-3">Birthday</span>
+              <span className="banner-word banner-word-4">Chuiya</span>
+              <span className="banner-word banner-word-5">🎂</span>
+            </div>
+            <div className="banner-sparkles">
+              {[...Array(15)].map((_, i) => (
+                <div key={i} className={`banner-sparkle banner-sparkle-${i}`}>⭐</div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Countdown Stage */}
       {stage === 'countdown' && (
@@ -226,7 +287,7 @@ function App() {
             {showRat && (
               <div className="rat-container">
                 <img 
-                  src="/24889b63-2a23-4c1d-bdeb-c6bc764031e5.png" 
+                  src="/cute-rat-character.png" 
                   alt="Cute rat character" 
                   className="rat-image"
                 />
@@ -310,7 +371,7 @@ function App() {
           {/* Rat Character - stays visible in both curtains and reveal stages */}
           <div className={`rat-container ${stage === 'reveal' ? 'rat-reveal-position' : ''} ${stage === 'curtains' && (showSecondSpeech || showRibbonButton) ? 'rat-curtain-position' : ''}`}>
             <img 
-              src="/24889b63-2a23-4c1d-bdeb-c6bc764031e5.png" 
+              src="/cute-rat-character.png" 
               alt="Cute rat character" 
               className="rat-image"
             />
@@ -407,37 +468,65 @@ function App() {
               )}
             </div>
           )}
-
-          {/* Confetti */}
-          {showConfetti && (
-            <div className="confetti-container">
-              {[...Array(100)].map((_, i) => (
-                <div key={i} className={`confetti confetti-${i % 6}`}></div>
-              ))}
-            </div>
-          )}
-
-          {/* Floating Balloons with Messages */}
-          {showBalloons && (
-            <div className="floating-balloons-container">
-              <div className="floating-balloon balloon-message-1">
-                <div className="balloon-body" style={{backgroundColor: '#ff9999'}}>😊</div>
-                <div className="balloon-ribbon"></div>
-                <div className="balloon-message">Areee Smile Toh De! 😄</div>
-              </div>
-              <div className="floating-balloon balloon-message-2">
-                <div className="balloon-body" style={{backgroundColor: '#99ccff'}}>🐭</div>
-                <div className="balloon-ribbon"></div>
-                <div className="balloon-message">Chuiyaa spotted!</div>
-              </div>
-              <div className="floating-balloon balloon-message-3">
-                <div className="balloon-body" style={{backgroundColor: '#baffc9'}}>🎂</div>
-                <div className="balloon-ribbon"></div>
-                <div className="balloon-message">Cake lover spotted!</div>
-              </div>
-            </div>
-          )}
         </>
+      )}
+
+      {/* Birthday Stage - Rat in celebration mode */}
+      {stage === 'birthday' && (
+        <div className="rat-container birthday-rat-position">
+          <img 
+            src="/cute-rat-character.png" 
+            alt="Cute rat character celebrating" 
+            className="rat-image birthday-rat"
+          />
+          
+          {/* Celebration sparkles around rat */}
+          <div className="magic-sparkles birthday-celebration">
+            {[...Array(12)].map((_, i) => (
+              <div key={i} className={`sparkle sparkle-birthday-${i}`}>🎉</div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Confetti */}
+      {showConfetti && (
+        <div className="confetti-container">
+          {[...Array(150)].map((_, i) => (
+            <div key={i} className={`confetti confetti-${i % 6}`}></div>
+          ))}
+        </div>
+      )}
+
+      {/* Floating Balloons with Messages */}
+      {showBalloons && (
+        <div className="floating-balloons-container">
+          <div className="floating-balloon balloon-message-1">
+            <div className="balloon-body" style={{backgroundColor: '#ff9999'}}>😊</div>
+            <div className="balloon-ribbon"></div>
+            <div className="balloon-message">Areee Smile Toh De! 😄</div>
+          </div>
+          <div className="floating-balloon balloon-message-2">
+            <div className="balloon-body" style={{backgroundColor: '#99ccff'}}>🐭</div>
+            <div className="balloon-ribbon"></div>
+            <div className="balloon-message">Chuiyaa spotted!</div>
+          </div>
+          <div className="floating-balloon balloon-message-3">
+            <div className="balloon-body" style={{backgroundColor: '#baffc9'}}>🎂</div>
+            <div className="balloon-ribbon"></div>
+            <div className="balloon-message">Cake lover spotted!</div>
+          </div>
+          <div className="floating-balloon balloon-message-4">
+            <div className="balloon-body" style={{backgroundColor: '#ffb3ff'}}>🎈</div>
+            <div className="balloon-ribbon"></div>
+            <div className="balloon-message">Party Time!</div>
+          </div>
+          <div className="floating-balloon balloon-message-5">
+            <div className="balloon-body" style={{backgroundColor: '#ffffb3'}}>🎊</div>
+            <div className="balloon-ribbon"></div>
+            <div className="balloon-message">Celebrate!</div>
+          </div>
+        </div>
       )}
     </div>
   );
