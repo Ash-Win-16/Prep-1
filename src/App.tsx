@@ -287,8 +287,8 @@ function App() {
             {showRat && (
               <div className="rat-container">
                 <img 
-                  src="/cute-rat-character.png" 
-                  alt="Cute rat character" 
+                  src="/chuiya-rat.png" 
+                  alt="Cute Chuiya rat character" 
                   className="rat-image"
                 />
                 
@@ -371,8 +371,8 @@ function App() {
           {/* Rat Character - stays visible in both curtains and reveal stages */}
           <div className={`rat-container ${stage === 'reveal' ? 'rat-reveal-position' : ''} ${stage === 'curtains' && (showSecondSpeech || showRibbonButton) ? 'rat-curtain-position' : ''}`}>
             <img 
-              src="/cute-rat-character.png" 
-              alt="Cute rat character" 
+              src="/chuiya-rat.png" 
+              alt="Cute Chuiya rat character" 
               className="rat-image"
             />
 
@@ -475,8 +475,8 @@ function App() {
       {stage === 'birthday' && (
         <div className="rat-container birthday-rat-position">
           <img 
-            src="/cute-rat-character.png" 
-            alt="Cute rat character celebrating" 
+            src="/chuiya-rat.png" 
+            alt="Chuiya celebrating birthday" 
             className="rat-image birthday-rat"
           />
           
