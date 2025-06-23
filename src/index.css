@@ -320,81 +320,6 @@
   }
 }
 
-/* Birthday Rat */
-.birthday-rat-container {
-  position: fixed;
-  bottom: 20%;
-  left: 20%;
-  z-index: 95;
-  animation: ratCelebrationEntrance 2s ease-out;
-}
-
-.birthday-rat-image {
-  width: 180px;
-  height: 180px;
-  object-fit: contain;
-  animation: birthdayRatDance 3s ease-in-out infinite;
-  filter: drop-shadow(0 15px 30px rgba(0,0,0,0.4));
-}
-
-.birthday-rat-sparkles {
-  position: absolute;
-  inset: -40px;
-  pointer-events: none;
-}
-
-.birthday-sparkle {
-  position: absolute;
-  font-size: 2rem;
-  opacity: 0;
-  animation: birthdaySparkleParty 2.5s ease-in-out infinite;
-}
-
-.birthday-sparkle-0 { top: 5%; left: 10%; animation-delay: 0s; }
-.birthday-sparkle-1 { top: 15%; right: 5%; animation-delay: 0.2s; }
-.birthday-sparkle-2 { bottom: 25%; left: 0%; animation-delay: 0.4s; }
-.birthday-sparkle-3 { bottom: 10%; right: 15%; animation-delay: 0.6s; }
-.birthday-sparkle-4 { top: 35%; left: -5%; animation-delay: 0.8s; }
-.birthday-sparkle-5 { top: 55%; right: 0%; animation-delay: 1s; }
-.birthday-sparkle-6 { bottom: 40%; left: 5%; animation-delay: 1.2s; }
-.birthday-sparkle-7 { top: 75%; right: 10%; animation-delay: 1.4s; }
-.birthday-sparkle-8 { bottom: 55%; right: 20%; animation-delay: 1.6s; }
-.birthday-sparkle-9 { top: 25%; left: 15%; animation-delay: 1.8s; }
-.birthday-sparkle-10 { bottom: 70%; left: 10%; animation-delay: 2s; }
-.birthday-sparkle-11 { top: 45%; right: 25%; animation-delay: 2.2s; }
-.birthday-sparkle-12 { top: 65%; left: 20%; animation-delay: 2.4s; }
-.birthday-sparkle-13 { bottom: 30%; right: 30%; animation-delay: 2.6s; }
-.birthday-sparkle-14 { top: 85%; left: 25%; animation-delay: 2.8s; }
-
-@keyframes ratCelebrationEntrance {
-  0% { 
-    opacity: 0; 
-    transform: translateY(100px) scale(0.5); 
-  }
-  100% { 
-    opacity: 1; 
-    transform: translateY(0) scale(1); 
-  }
-}
-
-@keyframes birthdayRatDance {
-  0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
-  25% { transform: translateY(-20px) rotate(5deg) scale(1.05); }
-  50% { transform: translateY(-10px) rotate(-3deg) scale(1.02); }
-  75% { transform: translateY(-15px) rotate(3deg) scale(1.03); }
-}
-
-@keyframes birthdaySparkleParty {
-  0%, 100% { 
-    opacity: 0; 
-    transform: translateY(0px) scale(0.8) rotate(0deg); 
-  }
-  50% { 
-    opacity: 1; 
-    transform: translateY(-25px) scale(2) rotate(360deg); 
-  }
-}
-
 /* Film grain effect */
 .film-grain {
   width: 100%;
@@ -1241,11 +1166,6 @@
     min-width: 35px;
   }
   
-  .birthday-rat-image {
-    width: 140px;
-    height: 140px;
-  }
-  
   .balloon-photo {
     width: 50px;
     height: 50px;
@@ -1325,11 +1245,6 @@
     top: 30px;
   }
   
-  .birthday-rat-image {
-    width: 120px;
-    height: 120px;
-  }
-  
   .balloon-photo {
     width: 40px;
     height: 40px;
@@ -1339,10 +1254,5 @@
   .balloon-caption {
     font-size: 10px;
     max-width: 80px;
-  }
-  
-  .birthday-rat-container {
-    left: 15%;
-    bottom: 15%;
   }
 }

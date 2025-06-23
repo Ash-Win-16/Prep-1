@@ -339,22 +339,6 @@ function App() {
               ))}
             </div>
           )}
-
-          {/* Birthday Rat Character */}
-          <div className="birthday-rat-container">
-            <img 
-              src="/chuiya-rat.png" 
-              alt="Chuiya celebrating birthday" 
-              className="birthday-rat-image"
-            />
-            
-            {/* Celebration sparkles around rat */}
-            <div className="birthday-rat-sparkles">
-              {[...Array(15)].map((_, i) => (
-                <div key={i} className={`birthday-sparkle birthday-sparkle-${i}`}>🎉</div>
-              ))}
-            </div>
-          </div>
         </>
       )}
 
