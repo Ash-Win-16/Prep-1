@@ -17,17 +17,22 @@ function App() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [showBalloons, setShowBalloons] = useState(false);
   const [showBirthdayBanner, setShowBirthdayBanner] = useState(false);
-  const [showPhotoBalloons, setShowPhotoBalloons] = useState(false);
+  const [showPhotoBalloon, setShowPhotoBalloon] = useState(false);
+  const [showFireworks, setShowFireworks] = useState(false);
+  const [candlesBlown, setCandlesBlown] = useState(false);
 
-  // Canvas ref for confetti
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  // Canvas refs for effects
+  const confettiCanvasRef = useRef<HTMLCanvasElement>(null);
+  const fireworksCanvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>();
+  const fireworksAnimationRef = useRef<number>();
 
   // Audio refs
   const countdownAudioRef = useRef<HTMLAudioElement | null>(null);
   const ratEntranceAudioRef = useRef<HTMLAudioElement | null>(null);
   const curtainOpenAudioRef = useRef<HTMLAudioElement | null>(null);
   const birthdayMusicRef = useRef<HTMLAudioElement | null>(null);
+  const blowCandlesAudioRef = useRef<HTMLAudioElement | null>(null);
 
   // Initialize audio
   useEffect(() => {
@@ -36,6 +41,7 @@ function App() {
     ratEntranceAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/magic-chime-02.wav');
     curtainOpenAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/ta-da.wav');
     birthdayMusicRef.current = new Audio('https://www.soundjay.com/misc/sounds/happy-birthday-song.wav');
+    blowCandlesAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/blow-candles.wav');
 
     // Set audio properties
     if (countdownAudioRef.current) {
@@ -52,10 +58,13 @@ function App() {
       birthdayMusicRef.current.volume = 0.5;
       birthdayMusicRef.current.loop = true;
     }
+    if (blowCandlesAudioRef.current) {
+      blowCandlesAudioRef.current.volume = 0.7;
+    }
 
     return () => {
       // Cleanup audio
-      [countdownAudioRef, ratEntranceAudioRef, curtainOpenAudioRef, birthdayMusicRef].forEach(ref => {
+      [countdownAudioRef, ratEntranceAudioRef, curtainOpenAudioRef, birthdayMusicRef, blowCandlesAudioRef].forEach(ref => {
         if (ref.current) {
           ref.current.pause();
           ref.current = null;
@@ -64,44 +73,52 @@ function App() {
     };
   }, []);
 
-  // Confetti animation
+  // Enhanced Confetti animation
   useEffect(() => {
-    if (stage === 'birthday' && showConfetti && canvasRef.current) {
-      const canvas = canvasRef.current;
+    if (stage === 'birthday' && showConfetti && confettiCanvasRef.current) {
+      const canvas = confettiCanvasRef.current;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
-      const confettiPieces = Array.from({ length: 150 }, () => ({
+      const confettiPieces = Array.from({ length: 200 }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height - canvas.height,
-        r: Math.random() * 6 + 4,
-        d: Math.random() * 10 + 5,
-        color: `hsl(${Math.random() * 360}, 70%, 60%)`,
+        r: Math.random() * 8 + 3,
+        d: Math.random() * 8 + 2,
+        color: `hsl(${Math.random() * 360}, 80%, 65%)`,
         tilt: Math.random() * 10 - 5,
-        tiltAngleIncremental: Math.random() * 0.07 + 0.05,
-        tiltAngle: 0
+        tiltAngleIncremental: Math.random() * 0.05 + 0.02,
+        tiltAngle: 0,
+        opacity: Math.random() * 0.8 + 0.2
       }));
 
       const drawConfetti = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         confettiPieces.forEach(p => {
+          ctx.save();
+          ctx.globalAlpha = p.opacity;
           ctx.beginPath();
           ctx.lineWidth = p.r / 2;
           ctx.strokeStyle = p.color;
-          ctx.moveTo(p.x + p.tilt + p.r / 4, p.y);
-          ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 4);
-          ctx.stroke();
+          ctx.fillStyle = p.color;
+          
+          // Draw confetti as rectangles for better visibility
+          ctx.translate(p.x + p.tilt, p.y);
+          ctx.rotate(p.tiltAngle);
+          ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r);
+          
+          ctx.restore();
 
           p.tiltAngle += p.tiltAngleIncremental;
-          p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
-          p.tilt = Math.sin(p.tiltAngle - p.r / 4) * 15;
+          p.y += (Math.cos(p.d) + 1 + p.r / 3) / 2;
+          p.tilt = Math.sin(p.tiltAngle - p.r / 3) * 12;
 
           if (p.y > canvas.height) {
-            p.y = -10;
+            p.y = -15;
             p.x = Math.random() * canvas.width;
           }
         });
@@ -119,13 +136,91 @@ function App() {
     }
   }, [stage, showConfetti]);
 
+  // Fireworks animation
+  useEffect(() => {
+    if (stage === 'birthday' && showFireworks && fireworksCanvasRef.current) {
+      const canvas = fireworksCanvasRef.current;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const fireworks = [];
+      let fireworkTimer = 0;
+
+      const createFirework = () => {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * (canvas.height * 0.6) + 50;
+        const particles = [];
+        
+        for (let i = 0; i < 30; i++) {
+          particles.push({
+            x: x,
+            y: y,
+            vx: (Math.random() - 0.5) * 8,
+            vy: (Math.random() - 0.5) * 8,
+            life: 60,
+            maxLife: 60,
+            color: `hsl(${Math.random() * 360}, 100%, 70%)`
+          });
+        }
+        
+        fireworks.push({ particles, life: 60 });
+      };
+
+      const drawFireworks = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        fireworkTimer++;
+        if (fireworkTimer % 40 === 0 && Math.random() < 0.7) {
+          createFirework();
+        }
+
+        fireworks.forEach((firework, fireworkIndex) => {
+          firework.particles.forEach((particle, particleIndex) => {
+            ctx.save();
+            ctx.globalAlpha = particle.life / particle.maxLife;
+            ctx.fillStyle = particle.color;
+            ctx.beginPath();
+            ctx.arc(particle.x, particle.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+            particle.vy += 0.1; // gravity
+            particle.life--;
+
+            if (particle.life <= 0) {
+              firework.particles.splice(particleIndex, 1);
+            }
+          });
+
+          if (firework.particles.length === 0) {
+            fireworks.splice(fireworkIndex, 1);
+          }
+        });
+
+        fireworksAnimationRef.current = requestAnimationFrame(drawFireworks);
+      };
+
+      drawFireworks();
+
+      return () => {
+        if (fireworksAnimationRef.current) {
+          cancelAnimationFrame(fireworksAnimationRef.current);
+        }
+      };
+    }
+  }, [stage, showFireworks]);
+
   useEffect(() => {
     // Countdown stage
     if (stage === 'countdown' && countdown > 0) {
       // Play countdown music
       if (countdown === 5 && countdownAudioRef.current) {
         countdownAudioRef.current.play().catch(() => {
-          // Fallback if audio doesn't play
           console.log('Audio autoplay blocked');
         });
       }
@@ -216,43 +311,61 @@ function App() {
         setStage('birthday');
         setShowBirthdayBanner(true);
         setShowConfetti(true);
+        setShowFireworks(true);
         
-        // Show photo balloons after confetti starts
+        // Show photo balloon after confetti starts
         setTimeout(() => {
-          setShowPhotoBalloons(true);
-        }, 1000);
+          setShowPhotoBalloon(true);
+        }, 1500);
         
-        // Show regular balloons after photo balloons
+        // Show regular balloons after photo balloon
         setTimeout(() => {
           setShowBalloons(true);
-        }, 2000);
+        }, 2500);
         
         // Hide confetti after animation
         setTimeout(() => {
           setShowConfetti(false);
-        }, 15000);
-        
-        // Hide photo balloons after animation
-        setTimeout(() => {
-          setShowPhotoBalloons(false);
         }, 20000);
+        
+        // Hide fireworks after animation
+        setTimeout(() => {
+          setShowFireworks(false);
+        }, 25000);
+        
+        // Hide photo balloon after animation
+        setTimeout(() => {
+          setShowPhotoBalloon(false);
+        }, 30000);
         
         // Hide regular balloons after animation
         setTimeout(() => {
           setShowBalloons(false);
-        }, 25000);
+        }, 35000);
         
         // Hide banner after celebration
         setTimeout(() => {
           setShowBirthdayBanner(false);
-        }, 30000);
+        }, 40000);
       }, 1000);
+    }
+  };
+
+  const handleCakeClick = () => {
+    if (!candlesBlown) {
+      setCandlesBlown(true);
+      // Play blow candles sound
+      if (blowCandlesAudioRef.current) {
+        blowCandlesAudioRef.current.play().catch(() => {
+          console.log('Audio play failed');
+        });
+      }
     }
   };
 
   // Enable audio on first user interaction
   const enableAudio = () => {
-    [countdownAudioRef, ratEntranceAudioRef, curtainOpenAudioRef, birthdayMusicRef].forEach(ref => {
+    [countdownAudioRef, ratEntranceAudioRef, curtainOpenAudioRef, birthdayMusicRef, blowCandlesAudioRef].forEach(ref => {
       if (ref.current) {
         ref.current.load();
       }
@@ -260,36 +373,58 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen relative overflow-hidden ${stage === 'birthday' ? 'birthday-background' : 'bg-black'}`} onClick={enableAudio}>
+    <div className={`min-h-screen relative overflow-hidden ${stage === 'birthday' ? 'birthday-magical-background' : 'bg-black'}`} onClick={enableAudio}>
       {/* Film grain overlay */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div className="film-grain"></div>
       </div>
 
-      {/* Birthday Stage - New Interface */}
+      {/* Birthday Stage - Enhanced Magical Interface */}
       {stage === 'birthday' && (
         <>
+          {/* Bokeh Background Effects */}
+          <div className="bokeh-container">
+            {[...Array(20)].map((_, i) => (
+              <div key={i} className={`bokeh bokeh-${i}`}></div>
+            ))}
+          </div>
+
+          {/* Floating Sparkles */}
+          <div className="floating-sparkles">
+            {[...Array(15)].map((_, i) => (
+              <div key={i} className={`floating-sparkle sparkle-${i}`}>✨</div>
+            ))}
+          </div>
+
           {/* Confetti Canvas */}
           {showConfetti && (
             <canvas
-              ref={canvasRef}
-              className="fixed top-0 left-0 w-full h-full pointer-events-none z-50"
+              ref={confettiCanvasRef}
+              className="fixed top-0 left-0 w-full h-full pointer-events-none z-40"
             />
           )}
 
-          {/* Letter Box Banner */}
+          {/* Fireworks Canvas */}
+          {showFireworks && (
+            <canvas
+              ref={fireworksCanvasRef}
+              className="fixed top-0 left-0 w-full h-full pointer-events-none z-45"
+            />
+          )}
+
+          {/* Enhanced Letter Box Banner */}
           {showBirthdayBanner && (
-            <div className="birthday-letter-banner">
-              <div className="banner-line">
+            <div className="enhanced-birthday-banner">
+              <div className="banner-row">
                 {['H', 'A', 'P', 'P', 'Y', ' ', 'B', 'I', 'R', 'T', 'H', 'D', 'A', 'Y'].map((letter, index) => (
-                  <div key={index} className={`letter-box ${letter === ' ' ? 'space' : ''}`}>
+                  <div key={index} className={`enhanced-letter-tile ${letter === ' ' ? 'space' : ''}`}>
                     {letter !== ' ' ? letter : ''}
                   </div>
                 ))}
               </div>
-              <div className="banner-line">
+              <div className="banner-row">
                 {['C', 'H', 'U', 'I', 'Y', 'A', 'A'].map((letter, index) => (
-                  <div key={index} className="letter-box letter-box-pink">
+                  <div key={index} className="enhanced-letter-tile enhanced-letter-tile-pink">
                     {letter}
                   </div>
                 ))}
@@ -297,44 +432,53 @@ function App() {
             </div>
           )}
 
-          {/* Birthday Cake */}
-          <div className="birthday-cake-container">
-            <div className="birthday-cake-emoji">🎂</div>
+          {/* Interactive 3D Birthday Cake */}
+          <div className="interactive-cake-container">
+            <div 
+              className={`interactive-birthday-cake ${candlesBlown ? 'candles-blown' : ''}`}
+              onClick={handleCakeClick}
+            >
+              <div className="cake-base">🎂</div>
+              {!candlesBlown && (
+                <div className="candle-flames">
+                  <div className="flame flame-1">🕯️</div>
+                  <div className="flame flame-2">🕯️</div>
+                  <div className="flame flame-3">🕯️</div>
+                </div>
+              )}
+              {candlesBlown && (
+                <div className="puff-effects">
+                  <div className="puff puff-1">💨</div>
+                  <div className="puff puff-2">💨</div>
+                  <div className="puff puff-3">💨</div>
+                </div>
+              )}
+            </div>
+            <div className="cake-click-hint">
+              {!candlesBlown ? 'Click to blow candles! 🕯️' : 'Wish granted! 🌟'}
+            </div>
           </div>
 
-          {/* Photo Balloons with Messages */}
-          {showPhotoBalloons && (
-            <div className="photo-balloons-container">
-              <div className="photo-balloon photo-balloon-1">
-                <div className="balloon-photo">😊</div>
-                <div className="balloon-caption">Areee Smile Toh De! 😄</div>
-              </div>
-              <div className="photo-balloon photo-balloon-2">
-                <div className="balloon-photo">🐭</div>
-                <div className="balloon-caption">Chuiyaa spotted!</div>
-              </div>
-              <div className="photo-balloon photo-balloon-3">
-                <div className="balloon-photo">🎂</div>
-                <div className="balloon-caption">Cake lover spotted!</div>
-              </div>
-              <div className="photo-balloon photo-balloon-4">
-                <div className="balloon-photo">🎈</div>
-                <div className="balloon-caption">Party Time!</div>
-              </div>
-              <div className="photo-balloon photo-balloon-5">
-                <div className="balloon-photo">🎊</div>
-                <div className="balloon-caption">Celebrate!</div>
+          {/* Special Photo Balloon */}
+          {showPhotoBalloon && (
+            <div className="special-photo-balloon">
+              <div className="photo-balloon-container">
+                <div className="photo-circle">
+                  <div className="placeholder-photo">📸</div>
+                </div>
+                <div className="photo-caption">Best day, best person 🥹💖</div>
+                <div className="balloon-ribbon"></div>
               </div>
             </div>
           )}
 
-          {/* Regular Floating Balloons */}
+          {/* Enhanced Floating Balloons */}
           {showBalloons && (
-            <div className="regular-balloons-container">
-              {[...Array(12)].map((_, i) => (
-                <div key={i} className={`regular-balloon regular-balloon-${i}`}>
+            <div className="enhanced-balloons-container">
+              {[...Array(15)].map((_, i) => (
+                <div key={i} className={`enhanced-balloon enhanced-balloon-${i}`}>
                   <div className="balloon-body"></div>
-                  <div className="balloon-string"></div>
+                  <div className="balloon-ribbon-string"></div>
                 </div>
               ))}
             </div>
