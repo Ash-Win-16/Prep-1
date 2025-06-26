@@ -17,7 +17,7 @@ function App() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [showBalloons, setShowBalloons] = useState(false);
   const [showBirthdayBanner, setShowBirthdayBanner] = useState(false);
-  const [showPhotoBalloon, setShowPhotoBalloon] = useState(false);
+  const [showPhotoBalloons, setShowPhotoBalloons] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
   const [candlesBlown, setCandlesBlown] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -470,48 +470,46 @@ function App() {
       setGiftOpened(true);
       setShowClickHint(false);
       
-      // Transform to birthday scene
+      // Directly transform to birthday scene without intermediate state
+      setStage('birthday');
+      setShowBirthdayBanner(true);
+      setShowConfetti(true);
+      setShowFireworks(true);
+      
+      // Show photo balloons after confetti starts
       setTimeout(() => {
-        setStage('birthday');
-        setShowBirthdayBanner(true);
-        setShowConfetti(true);
-        setShowFireworks(true);
-        
-        // Show photo balloon after confetti starts
-        setTimeout(() => {
-          setShowPhotoBalloon(true);
-        }, 1500);
-        
-        // Show regular balloons after photo balloon
-        setTimeout(() => {
-          setShowBalloons(true);
-        }, 2500);
-        
-        // Hide confetti after animation
-        setTimeout(() => {
-          setShowConfetti(false);
-        }, 20000);
-        
-        // Hide fireworks after animation
-        setTimeout(() => {
-          setShowFireworks(false);
-        }, 25000);
-        
-        // Hide photo balloon after animation
-        setTimeout(() => {
-          setShowPhotoBalloon(false);
-        }, 30000);
-        
-        // Hide regular balloons after animation
-        setTimeout(() => {
-          setShowBalloons(false);
-        }, 35000);
-        
-        // Hide banner after celebration
-        setTimeout(() => {
-          setShowBirthdayBanner(false);
-        }, 40000);
-      }, 1000);
+        setShowPhotoBalloons(true);
+      }, 1500);
+      
+      // Show regular balloons after photo balloons
+      setTimeout(() => {
+        setShowBalloons(true);
+      }, 2500);
+      
+      // Hide confetti after animation
+      setTimeout(() => {
+        setShowConfetti(false);
+      }, 20000);
+      
+      // Hide fireworks after animation
+      setTimeout(() => {
+        setShowFireworks(false);
+      }, 25000);
+      
+      // Hide photo balloons after animation
+      setTimeout(() => {
+        setShowPhotoBalloons(false);
+      }, 30000);
+      
+      // Hide regular balloons after animation
+      setTimeout(() => {
+        setShowBalloons(false);
+      }, 35000);
+      
+      // Hide banner after celebration
+      setTimeout(() => {
+        setShowBirthdayBanner(false);
+      }, 40000);
     }
   };
 
@@ -651,30 +649,63 @@ function App() {
                 </div>
               )}
             </div>
-            <div className="cake-click-hint">
-              {!candlesBlown ? 'Click to blow candles! 🕯️' : 'Make a wish, Chuiyaa! ✨'}
-            </div>
+            {/* Removed the click hint text */}
           </div>
 
-          {/* Special Photo Balloon with Enhanced Animation */}
-          {showPhotoBalloon && (
-            <div className="special-photo-balloon">
-              <div className="photo-balloon-container">
-                <div className="photo-circle">
-                  <div className="placeholder-photo">📸</div>
-                  {/* Subtle glow effect */}
-                  <div className="photo-glow"></div>
-                </div>
-                <div className="photo-caption">Best day, best person 🥹💖</div>
-                <div className="balloon-ribbon-tail"></div>
-                {/* Photo balloon sparkles */}
-                <div className="photo-sparkles">
-                  {[...Array(6)].map((_, i) => (
-                    <div key={i} className={`photo-sparkle photo-sparkle-${i}`}>✨</div>
-                  ))}
+          {/* Three Special Photo Balloons with Different Captions */}
+          {showPhotoBalloons && (
+            <>
+              {/* First Photo Balloon */}
+              <div className="special-photo-balloon balloon-1">
+                <div className="photo-balloon-container">
+                  <div className="photo-circle">
+                    <div className="placeholder-photo">📸</div>
+                    <div className="photo-glow"></div>
+                  </div>
+                  <div className="photo-caption">Chotti Bacchi ho kya ....</div>
+                  <div className="balloon-ribbon-tail"></div>
+                  <div className="photo-sparkles">
+                    {[...Array(6)].map((_, i) => (
+                      <div key={i} className={`photo-sparkle photo-sparkle-${i}`}>✨</div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+
+              {/* Second Photo Balloon */}
+              <div className="special-photo-balloon balloon-2">
+                <div className="photo-balloon-container">
+                  <div className="photo-circle">
+                    <div className="placeholder-photo">📸</div>
+                    <div className="photo-glow"></div>
+                  </div>
+                  <div className="photo-caption">Beauty in wisdom</div>
+                  <div className="balloon-ribbon-tail"></div>
+                  <div className="photo-sparkles">
+                    {[...Array(6)].map((_, i) => (
+                      <div key={i} className={`photo-sparkle photo-sparkle-${i}`}>✨</div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Third Photo Balloon */}
+              <div className="special-photo-balloon balloon-3">
+                <div className="photo-balloon-container">
+                  <div className="photo-circle">
+                    <div className="placeholder-photo">📸</div>
+                    <div className="photo-glow"></div>
+                  </div>
+                  <div className="photo-caption">Baar Baar hmm bolne wali</div>
+                  <div className="balloon-ribbon-tail"></div>
+                  <div className="photo-sparkles">
+                    {[...Array(6)].map((_, i) => (
+                      <div key={i} className={`photo-sparkle photo-sparkle-${i}`}>✨</div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </>
           )}
 
           {/* Enhanced Floating Balloons with Random Movement */}
@@ -879,35 +910,22 @@ function App() {
                 className={`gift-box ${giftOpened ? 'gift-opened' : ''}`}
                 onClick={handleGiftClick}
               >
-                {!giftOpened ? (
-                  <>
-                    <div className="gift-box-body">
-                      <div className="gift-ribbon-horizontal"></div>
-                      <div className="gift-ribbon-vertical"></div>
-                      <div className="gift-bow">
-                        <div className="bow-left"></div>
-                        <div className="bow-right"></div>
-                        <div className="bow-center"></div>
-                      </div>
-                    </div>
-                    
-                    {/* Gift sparkles */}
-                    <div className="gift-sparkles">
-                      {[...Array(12)].map((_, i) => (
-                        <div key={i} className={`gift-sparkle gift-sparkle-${i}`}>✨</div>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <div className="gift-contents">
-                    <div className="birthday-cake">🎂</div>
-                    <div className="balloons-small">
-                      <div className="balloon-small balloon-small-1">🎈</div>
-                      <div className="balloon-small balloon-small-2">🎈</div>
-                      <div className="balloon-small balloon-small-3">🎈</div>
-                    </div>
+                <div className="gift-box-body">
+                  <div className="gift-ribbon-horizontal"></div>
+                  <div className="gift-ribbon-vertical"></div>
+                  <div className="gift-bow">
+                    <div className="bow-left"></div>
+                    <div className="bow-right"></div>
+                    <div className="bow-center"></div>
                   </div>
-                )}
+                </div>
+                
+                {/* Gift sparkles */}
+                <div className="gift-sparkles">
+                  {[...Array(12)].map((_, i) => (
+                    <div key={i} className={`gift-sparkle gift-sparkle-${i}`}>✨</div>
+                  ))}
+                </div>
               </div>
               
               {/* Click hint */}
