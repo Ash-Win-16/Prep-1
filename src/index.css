@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Enhanced Magical Birthday Background */
+/* Enhanced Magical Birthday Background with Parallax */
 .birthday-magical-background {
   background: linear-gradient(135deg, 
     #ffecd2 0%, 
@@ -12,21 +12,22 @@
     #fecfef 100%);
   animation: magicalBackgroundShift 12s ease-in-out infinite;
   position: relative;
+  transition: background 0.3s ease;
 }
 
 @keyframes magicalBackgroundShift {
   0%, 100% { 
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 25%, #ff9a9e 50%, #fecfef 75%, #fecfef 100%);
+    filter: hue-rotate(0deg) brightness(1);
   }
   33% { 
-    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 25%, #ffd89b 50%, #19547b 75%, #a8edea 100%);
+    filter: hue-rotate(30deg) brightness(1.1);
   }
   66% { 
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 25%, #ff9a9e 50%, #fad0c4 75%, #ffd1ff 100%);
+    filter: hue-rotate(-20deg) brightness(0.95);
   }
 }
 
-/* Bokeh Background Effects */
+/* Enhanced Bokeh Background Effects */
 .bokeh-container {
   position: fixed;
   top: 0;
@@ -40,8 +41,9 @@
 .bokeh {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
-  animation: bokehFloat 8s ease-in-out infinite;
+  background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+  animation: bokehFloat 10s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(255,255,255,0.2);
 }
 
 .bokeh-0 { width: 60px; height: 60px; top: 10%; left: 15%; animation-delay: 0s; }
@@ -64,6 +66,11 @@
 .bokeh-17 { width: 55px; height: 55px; top: 12%; left: 25%; animation-delay: 2.8s; }
 .bokeh-18 { width: 40px; height: 40px; top: 45%; left: 65%; animation-delay: 4.2s; }
 .bokeh-19 { width: 65px; height: 65px; top: 78%; left: 50%; animation-delay: 6.8s; }
+.bokeh-20 { width: 55px; height: 55px; top: 8%; left: 35%; animation-delay: 1.8s; }
+.bokeh-21 { width: 45px; height: 45px; top: 28%; left: 65%; animation-delay: 3.2s; }
+.bokeh-22 { width: 60px; height: 60px; top: 48%; left: 85%; animation-delay: 4.8s; }
+.bokeh-23 { width: 50px; height: 50px; top: 68%; left: 15%; animation-delay: 6.2s; }
+.bokeh-24 { width: 40px; height: 40px; top: 88%; left: 55%; animation-delay: 7.8s; }
 
 @keyframes bokehFloat {
   0%, 100% { 
@@ -71,12 +78,12 @@
     opacity: 0.3;
   }
   50% { 
-    transform: translateY(-30px) scale(1.1);
-    opacity: 0.6;
+    transform: translateY(-40px) scale(1.15);
+    opacity: 0.7;
   }
 }
 
-/* Floating Sparkles */
+/* Enhanced Floating Sparkles */
 .floating-sparkles {
   position: fixed;
   top: 0;
@@ -89,9 +96,10 @@
 
 .floating-sparkle {
   position: absolute;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   opacity: 0;
-  animation: sparkleFloat 4s ease-in-out infinite;
+  animation: sparkleFloat 5s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(255,215,0,0.6));
 }
 
 .sparkle-0 { top: 15%; left: 10%; animation-delay: 0s; }
@@ -109,6 +117,11 @@
 .sparkle-12 { top: 10%; left: 80%; animation-delay: 2.8s; }
 .sparkle-13 { top: 30%; left: 45%; animation-delay: 3.3s; }
 .sparkle-14 { top: 70%; left: 65%; animation-delay: 3.8s; }
+.sparkle-15 { top: 50%; left: 5%; animation-delay: 4.3s; }
+.sparkle-16 { top: 90%; left: 70%; animation-delay: 4.8s; }
+.sparkle-17 { top: 5%; left: 55%; animation-delay: 0.3s; }
+.sparkle-18 { top: 95%; left: 35%; animation-delay: 1.8s; }
+.sparkle-19 { top: 25%; left: 95%; animation-delay: 2.3s; }
 
 @keyframes sparkleFloat {
   0%, 100% { 
@@ -117,11 +130,11 @@
   }
   50% { 
     opacity: 1; 
-    transform: translateY(-20px) scale(1.2) rotate(180deg); 
+    transform: translateY(-25px) scale(1.3) rotate(180deg); 
   }
 }
 
-/* Enhanced Letter Box Banner */
+/* Enhanced Letter Box Banner with Rat Mascot */
 .enhanced-birthday-banner {
   position: fixed;
   top: 60px;
@@ -129,7 +142,7 @@
   transform: translateX(-50%);
   text-align: center;
   z-index: 100;
-  animation: bannerFloatIn 3s ease-out, bannerSway 6s ease-in-out infinite 3s;
+  animation: bannerFloatIn 3s ease-out, bannerSway 8s ease-in-out infinite 3s;
 }
 
 .banner-row {
@@ -151,12 +164,12 @@
   font-size: 32px;
   font-weight: bold;
   font-family: 'Comic Sans MS', cursive, sans-serif;
-  animation: letterTileBounce 3s ease-in-out infinite;
+  animation: letterTileJiggle 4s ease-in-out infinite;
   min-width: 50px;
   text-align: center;
   border: 3px solid rgba(255, 255, 255, 0.2);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .enhanced-letter-tile::before {
@@ -166,8 +179,8 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-  animation: shimmer 3s ease-in-out infinite;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.15), transparent);
+  animation: shimmer 4s ease-in-out infinite;
 }
 
 .enhanced-letter-tile.space {
@@ -183,6 +196,74 @@
     0 8px 25px rgba(255, 175, 204, 0.4),
     inset 0 2px 0 rgba(255, 255, 255, 0.3),
     inset 0 -2px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Rat Mascot Peeking */
+.rat-mascot-peek {
+  position: absolute;
+  top: -25px;
+  right: -15px;
+  z-index: 10;
+  animation: mascotPeek 6s ease-in-out infinite;
+}
+
+.mascot-image {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+@keyframes mascotPeek {
+  0%, 80%, 100% { 
+    transform: translateY(0px) rotate(0deg);
+    opacity: 1;
+  }
+  10%, 70% { 
+    transform: translateY(-5px) rotate(5deg);
+    opacity: 1;
+  }
+  85%, 95% {
+    opacity: 0.7;
+  }
+}
+
+/* Banner Sparkles */
+.banner-sparkles {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120%;
+  height: 60px;
+  pointer-events: none;
+}
+
+.banner-sparkle {
+  position: absolute;
+  font-size: 1.2rem;
+  opacity: 0;
+  animation: bannerSparkleFloat 3s ease-in-out infinite;
+}
+
+.banner-sparkle-0 { top: 0; left: 10%; animation-delay: 0s; }
+.banner-sparkle-1 { top: 20px; left: 30%; animation-delay: 0.5s; }
+.banner-sparkle-2 { top: 10px; left: 50%; animation-delay: 1s; }
+.banner-sparkle-3 { top: 25px; left: 70%; animation-delay: 1.5s; }
+.banner-sparkle-4 { top: 5px; left: 90%; animation-delay: 2s; }
+.banner-sparkle-5 { top: 30px; left: 20%; animation-delay: 2.5s; }
+.banner-sparkle-6 { top: 15px; left: 80%; animation-delay: 0.8s; }
+.banner-sparkle-7 { top: 35px; left: 60%; animation-delay: 1.8s; }
+
+@keyframes bannerSparkleFloat {
+  0%, 100% { 
+    opacity: 0; 
+    transform: translateY(0px) scale(0.5) rotate(0deg); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: translateY(-15px) scale(1.2) rotate(180deg); 
+  }
 }
 
 .enhanced-letter-tile:nth-child(1) { animation-delay: 0s; }
@@ -216,9 +297,11 @@
   50% { transform: translateX(-50%) rotate(1deg); }
 }
 
-@keyframes letterTileBounce {
-  0%, 100% { transform: translateY(0px) scale(1); }
-  50% { transform: translateY(-8px) scale(1.05); }
+@keyframes letterTileJiggle {
+  0%, 100% { transform: translateY(0px) scale(1) rotate(0deg); }
+  25% { transform: translateY(-3px) scale(1.02) rotate(1deg); }
+  50% { transform: translateY(-6px) scale(1.05) rotate(0deg); }
+  75% { transform: translateY(-3px) scale(1.02) rotate(-1deg); }
 }
 
 @keyframes shimmer {
@@ -297,9 +380,14 @@
   margin-top: 15px;
   color: #ff6b81;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   animation: hintPulse 2s ease-in-out infinite;
+  background: rgba(255,255,255,0.9);
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: inline-block;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 @keyframes cakeGentleBounce {
@@ -327,13 +415,13 @@
   }
 }
 
-/* Special Photo Balloon */
+/* Enhanced Special Photo Balloon */
 .special-photo-balloon {
   position: fixed;
   bottom: -200px;
   left: 20%;
   z-index: 85;
-  animation: photoBalloonsRise 25s linear infinite;
+  animation: photoBalloonsGentle 30s ease-in-out infinite;
 }
 
 .photo-balloon-container {
@@ -346,7 +434,7 @@
   height: 80px;
   border-radius: 50%;
   border: 4px solid white;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.4);
   background: linear-gradient(135deg, #ff9999, #ff6666);
   display: flex;
   align-items: center;
@@ -355,10 +443,20 @@
   margin: 0 auto;
   position: relative;
   overflow: hidden;
+  animation: photoBalloonBob 4s ease-in-out infinite;
+}
+
+.photo-glow {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+  animation: photoGlow 3s ease-in-out infinite;
 }
 
 .placeholder-photo {
   font-size: 28px;
+  z-index: 1;
 }
 
 .photo-caption {
@@ -375,7 +473,7 @@
   margin-right: auto;
 }
 
-.balloon-ribbon {
+.balloon-ribbon-tail {
   position: absolute;
   top: 80px;
   left: 50%;
@@ -384,27 +482,77 @@
   background: linear-gradient(180deg, #ff6666, #ff4444);
   transform: translateX(-50%);
   box-shadow: 2px 0 4px rgba(0,0,0,0.2);
+  animation: ribbonWave 3s ease-in-out infinite;
 }
 
-@keyframes photoBalloonsRise {
+.photo-sparkles {
+  position: absolute;
+  inset: -20px;
+  pointer-events: none;
+}
+
+.photo-sparkle {
+  position: absolute;
+  font-size: 1rem;
+  opacity: 0;
+  animation: photoSparkleFloat 2.5s ease-in-out infinite;
+}
+
+.photo-sparkle-0 { top: 10%; left: 10%; animation-delay: 0s; }
+.photo-sparkle-1 { top: 20%; right: 10%; animation-delay: 0.4s; }
+.photo-sparkle-2 { bottom: 30%; left: 5%; animation-delay: 0.8s; }
+.photo-sparkle-3 { bottom: 20%; right: 15%; animation-delay: 1.2s; }
+.photo-sparkle-4 { top: 50%; left: -5%; animation-delay: 1.6s; }
+.photo-sparkle-5 { top: 60%; right: -5%; animation-delay: 2s; }
+
+@keyframes photoBalloonsGentle {
   0% { 
     bottom: -200px; 
     opacity: 0;
     transform: translateX(0) rotate(0deg);
   }
-  10% { opacity: 1; }
-  80% { 
+  15% { 
+    opacity: 1;
+    bottom: 20vh;
+  }
+  85% { 
     opacity: 1;
     bottom: 70vh;
   }
   100% { 
     bottom: 100vh; 
     opacity: 0;
-    transform: translateX(50px) rotate(15deg);
+    transform: translateX(30px) rotate(10deg);
   }
 }
 
-/* Enhanced Floating Balloons */
+@keyframes photoBalloonBob {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes photoGlow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes ribbonWave {
+  0%, 100% { transform: translateX(-50%) rotate(0deg); }
+  50% { transform: translateX(-50%) rotate(3deg); }
+}
+
+@keyframes photoSparkleFloat {
+  0%, 100% { 
+    opacity: 0; 
+    transform: translateY(0px) scale(0.8) rotate(0deg); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: translateY(-15px) scale(1.2) rotate(180deg); 
+  }
+}
+
+/* Enhanced Floating Balloons with 3D Effects and Random Movement */
 .enhanced-balloons-container {
   position: fixed;
   top: 0;
@@ -417,7 +565,7 @@
 
 .enhanced-balloon {
   position: absolute;
-  animation: enhancedBalloonsFloat 20s ease-in-out infinite;
+  animation: enhancedBalloonsRandomFloat 25s ease-in-out infinite;
 }
 
 .balloon-body {
@@ -427,7 +575,30 @@
   position: relative;
   box-shadow: 
     inset -10px -10px 0 rgba(0,0,0,0.1),
-    0 8px 20px rgba(0,0,0,0.2);
+    0 12px 25px rgba(0,0,0,0.3);
+}
+
+.balloon-highlight {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  width: 15px;
+  height: 25px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+.balloon-shadow {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 8px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 50%;
+  filter: blur(4px);
 }
 
 .balloon-ribbon-string {
@@ -439,126 +610,171 @@
   background: linear-gradient(180deg, #333, #666);
   transform: translateX(-50%);
   box-shadow: 2px 0 4px rgba(0,0,0,0.2);
+  animation: stringWave 4s ease-in-out infinite;
 }
 
+/* Pastel balloon colors */
 .enhanced-balloon-0 { 
   left: 5%; 
   top: 25%;
   animation-delay: 0s; 
 }
-.enhanced-balloon-0 .balloon-body { background: radial-gradient(circle at 30% 30%, #ff9999, #ff6666); }
+.enhanced-balloon-0 .balloon-body { background: radial-gradient(circle at 30% 30%, #ffb3ba, #ff8a95); }
 
 .enhanced-balloon-1 { 
   left: 15%; 
   top: 45%;
   animation-delay: 1s; 
 }
-.enhanced-balloon-1 .balloon-body { background: radial-gradient(circle at 30% 30%, #99ccff, #6699ff); }
+.enhanced-balloon-1 .balloon-body { background: radial-gradient(circle at 30% 30%, #bae1ff, #87ceeb); }
 
 .enhanced-balloon-2 { 
   left: 25%; 
   top: 65%;
   animation-delay: 2s; 
 }
-.enhanced-balloon-2 .balloon-body { background: radial-gradient(circle at 30% 30%, #99ff99, #66ff66); }
+.enhanced-balloon-2 .balloon-body { background: radial-gradient(circle at 30% 30%, #baffc9, #98fb98); }
 
 .enhanced-balloon-3 { 
   left: 35%; 
   top: 35%;
   animation-delay: 3s; 
 }
-.enhanced-balloon-3 .balloon-body { background: radial-gradient(circle at 30% 30%, #ffff99, #ffff66); }
+.enhanced-balloon-3 .balloon-body { background: radial-gradient(circle at 30% 30%, #ffffba, #ffffe0); }
 
 .enhanced-balloon-4 { 
   left: 45%; 
   top: 55%;
   animation-delay: 4s; 
 }
-.enhanced-balloon-4 .balloon-body { background: radial-gradient(circle at 30% 30%, #ff99ff, #ff66ff); }
+.enhanced-balloon-4 .balloon-body { background: radial-gradient(circle at 30% 30%, #ffb3ff, #dda0dd); }
 
 .enhanced-balloon-5 { 
   left: 55%; 
   top: 75%;
   animation-delay: 5s; 
 }
-.enhanced-balloon-5 .balloon-body { background: radial-gradient(circle at 30% 30%, #ffcc99, #ff9966); }
+.enhanced-balloon-5 .balloon-body { background: radial-gradient(circle at 30% 30%, #ffd1b3, #ffa07a); }
 
 .enhanced-balloon-6 { 
   left: 65%; 
   top: 30%;
   animation-delay: 6s; 
 }
-.enhanced-balloon-6 .balloon-body { background: radial-gradient(circle at 30% 30%, #cc99ff, #9966ff); }
+.enhanced-balloon-6 .balloon-body { background: radial-gradient(circle at 30% 30%, #d1b3ff, #b19cd9); }
 
 .enhanced-balloon-7 { 
   left: 75%; 
   top: 50%;
   animation-delay: 7s; 
 }
-.enhanced-balloon-7 .balloon-body { background: radial-gradient(circle at 30% 30%, #99ffcc, #66ffcc); }
+.enhanced-balloon-7 .balloon-body { background: radial-gradient(circle at 30% 30%, #b3ffd1, #90ee90); }
 
 .enhanced-balloon-8 { 
   left: 85%; 
   top: 70%;
   animation-delay: 8s; 
 }
-.enhanced-balloon-8 .balloon-body { background: radial-gradient(circle at 30% 30%, #ffcccc, #ff9999); }
+.enhanced-balloon-8 .balloon-body { background: radial-gradient(circle at 30% 30%, #ffcccc, #ffc0cb); }
 
 .enhanced-balloon-9 { 
   left: 95%; 
   top: 40%;
   animation-delay: 9s; 
 }
-.enhanced-balloon-9 .balloon-body { background: radial-gradient(circle at 30% 30%, #ccffff, #99ffff); }
+.enhanced-balloon-9 .balloon-body { background: radial-gradient(circle at 30% 30%, #ccffff, #afeeee); }
 
 .enhanced-balloon-10 { 
   left: 10%; 
   top: 60%;
   animation-delay: 10s; 
 }
-.enhanced-balloon-10 .balloon-body { background: radial-gradient(circle at 30% 30%, #ffccff, #ffccff); }
+.enhanced-balloon-10 .balloon-body { background: radial-gradient(circle at 30% 30%, #ffccff, #f0e68c); }
 
 .enhanced-balloon-11 { 
   left: 90%; 
   top: 20%;
   animation-delay: 11s; 
 }
-.enhanced-balloon-11 .balloon-body { background: radial-gradient(circle at 30% 30%, #cccc99, #999966); }
+.enhanced-balloon-11 .balloon-body { background: radial-gradient(circle at 30% 30%, #e6ccb3, #deb887); }
 
 .enhanced-balloon-12 { 
   left: 20%; 
   top: 80%;
   animation-delay: 12s; 
 }
-.enhanced-balloon-12 .balloon-body { background: radial-gradient(circle at 30% 30%, #ff99cc, #ff66aa); }
+.enhanced-balloon-12 .balloon-body { background: radial-gradient(circle at 30% 30%, #ffb3e6, #ff69b4); }
 
 .enhanced-balloon-13 { 
   left: 80%; 
   top: 60%;
   animation-delay: 13s; 
 }
-.enhanced-balloon-13 .balloon-body { background: radial-gradient(circle at 30% 30%, #99ff66, #66cc33); }
+.enhanced-balloon-13 .balloon-body { background: radial-gradient(circle at 30% 30%, #b3ff99, #adff2f); }
 
 .enhanced-balloon-14 { 
   left: 50%; 
   top: 15%;
   animation-delay: 14s; 
 }
-.enhanced-balloon-14 .balloon-body { background: radial-gradient(circle at 30% 30%, #6699cc, #3366aa); }
+.enhanced-balloon-14 .balloon-body { background: radial-gradient(circle at 30% 30%, #99b3ff, #6495ed); }
 
-@keyframes enhancedBalloonsFloat {
+.enhanced-balloon-15 { 
+  left: 30%; 
+  top: 85%;
+  animation-delay: 15s; 
+}
+.enhanced-balloon-15 .balloon-body { background: radial-gradient(circle at 30% 30%, #ffcc99, #f4a460); }
+
+.enhanced-balloon-16 { 
+  left: 70%; 
+  top: 10%;
+  animation-delay: 16s; 
+}
+.enhanced-balloon-16 .balloon-body { background: radial-gradient(circle at 30% 30%, #cc99ff, #da70d6); }
+
+.enhanced-balloon-17 { 
+  left: 40%; 
+  top: 90%;
+  animation-delay: 17s; 
+}
+.enhanced-balloon-17 .balloon-body { background: radial-gradient(circle at 30% 30%, #99ffcc, #20b2aa); }
+
+.enhanced-balloon-18 { 
+  left: 60%; 
+  top: 5%;
+  animation-delay: 18s; 
+}
+.enhanced-balloon-18 .balloon-body { background: radial-gradient(circle at 30% 30%, #ffccb3, #ffa500); }
+
+.enhanced-balloon-19 { 
+  left: 8%; 
+  top: 95%;
+  animation-delay: 19s; 
+}
+.enhanced-balloon-19 .balloon-body { background: radial-gradient(circle at 30% 30%, #b3ccff, #87cefa); }
+
+@keyframes enhancedBalloonsRandomFloat {
   0%, 100% {
     transform: translateY(0) rotate(0deg) translateX(0);
   }
-  25% {
-    transform: translateY(-80px) rotate(3deg) translateX(20px);
+  20% {
+    transform: translateY(-60px) rotate(2deg) translateX(15px);
   }
-  50% {
-    transform: translateY(-120px) rotate(-2deg) translateX(-15px);
+  40% {
+    transform: translateY(-100px) rotate(-3deg) translateX(-20px);
   }
-  75% {
-    transform: translateY(-90px) rotate(4deg) translateX(25px);
+  60% {
+    transform: translateY(-80px) rotate(4deg) translateX(25px);
   }
+  80% {
+    transform: translateY(-120px) rotate(-2deg) translateX(-10px);
+  }
+}
+
+@keyframes stringWave {
+  0%, 100% { transform: translateX(-50%) rotate(0deg); }
+  50% { transform: translateX(-50%) rotate(2deg); }
 }
 
 /* Film grain effect */
@@ -1348,6 +1564,11 @@
   50% { opacity: 1; transform: translateX(-50%) scale(1.05); }
 }
 
+@keyframes cakeBounce {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-8px) scale(1.05); }
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .countdown-circle {
@@ -1421,6 +1642,11 @@
   .balloon-body {
     width: 60px;
     height: 75px;
+  }
+
+  .mascot-image {
+    width: 30px;
+    height: 30px;
   }
 }
 
@@ -1509,5 +1735,14 @@
   
   .balloon-ribbon-string {
     height: 60px;
+  }
+
+  .mascot-image {
+    width: 25px;
+    height: 25px;
+  }
+
+  .cake-click-hint {
+    font-size: 14px;
   }
 }

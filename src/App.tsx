@@ -20,12 +20,15 @@ function App() {
   const [showPhotoBalloon, setShowPhotoBalloon] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
   const [candlesBlown, setCandlesBlown] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   // Canvas refs for effects
   const confettiCanvasRef = useRef<HTMLCanvasElement>(null);
   const fireworksCanvasRef = useRef<HTMLCanvasElement>(null);
+  const sparkleCanvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>();
   const fireworksAnimationRef = useRef<number>();
+  const sparkleAnimationRef = useRef<number>();
 
   // Audio refs
   const countdownAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -33,6 +36,21 @@ function App() {
   const curtainOpenAudioRef = useRef<HTMLAudioElement | null>(null);
   const birthdayMusicRef = useRef<HTMLAudioElement | null>(null);
   const blowCandlesAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Mouse movement for parallax effect
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth) * 100,
+        y: (e.clientY / window.innerHeight) * 100
+      });
+    };
+
+    if (stage === 'birthday') {
+      window.addEventListener('mousemove', handleMouseMove);
+      return () => window.removeEventListener('mousemove', handleMouseMove);
+    }
+  }, [stage]);
 
   // Initialize audio
   useEffect(() => {
@@ -73,6 +91,77 @@ function App() {
     };
   }, []);
 
+  // Enhanced Sparkle Particles Background
+  useEffect(() => {
+    if (stage === 'birthday' && sparkleCanvasRef.current) {
+      const canvas = sparkleCanvasRef.current;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const sparkles = Array.from({ length: 50 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 3 + 1,
+        opacity: Math.random() * 0.8 + 0.2,
+        speed: Math.random() * 0.5 + 0.2,
+        angle: Math.random() * Math.PI * 2,
+        color: `hsl(${Math.random() * 60 + 40}, 80%, 80%)`, // Warm sparkle colors
+        twinkle: Math.random() * 0.02 + 0.01
+      }));
+
+      const drawSparkles = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        sparkles.forEach(sparkle => {
+          ctx.save();
+          ctx.globalAlpha = sparkle.opacity;
+          ctx.fillStyle = sparkle.color;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = sparkle.color;
+          
+          // Draw sparkle as a star shape
+          ctx.translate(sparkle.x, sparkle.y);
+          ctx.rotate(sparkle.angle);
+          ctx.beginPath();
+          for (let i = 0; i < 4; i++) {
+            ctx.lineTo(0, sparkle.size);
+            ctx.rotate(Math.PI / 4);
+            ctx.lineTo(0, sparkle.size / 2);
+            ctx.rotate(Math.PI / 4);
+          }
+          ctx.fill();
+          ctx.restore();
+
+          // Update sparkle properties
+          sparkle.y += sparkle.speed;
+          sparkle.angle += 0.02;
+          sparkle.opacity += Math.sin(Date.now() * sparkle.twinkle) * 0.01;
+          
+          if (sparkle.opacity > 1) sparkle.opacity = 1;
+          if (sparkle.opacity < 0.1) sparkle.opacity = 0.1;
+
+          if (sparkle.y > canvas.height + 10) {
+            sparkle.y = -10;
+            sparkle.x = Math.random() * canvas.width;
+          }
+        });
+
+        sparkleAnimationRef.current = requestAnimationFrame(drawSparkles);
+      };
+
+      drawSparkles();
+
+      return () => {
+        if (sparkleAnimationRef.current) {
+          cancelAnimationFrame(sparkleAnimationRef.current);
+        }
+      };
+    }
+  }, [stage]);
+
   // Enhanced Confetti animation
   useEffect(() => {
     if (stage === 'birthday' && showConfetti && confettiCanvasRef.current) {
@@ -83,7 +172,7 @@ function App() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
-      const confettiPieces = Array.from({ length: 200 }, () => ({
+      const confettiPieces = Array.from({ length: 300 }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height - canvas.height,
         r: Math.random() * 8 + 3,
@@ -92,29 +181,35 @@ function App() {
         tilt: Math.random() * 10 - 5,
         tiltAngleIncremental: Math.random() * 0.05 + 0.02,
         tiltAngle: 0,
-        opacity: Math.random() * 0.8 + 0.2
+        opacity: Math.random() * 0.8 + 0.2,
+        depth: Math.random() * 0.5 + 0.5 // For layered effect
       }));
 
       const drawConfetti = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
+        // Sort by depth for layered effect
+        confettiPieces.sort((a, b) => a.depth - b.depth);
+        
         confettiPieces.forEach(p => {
           ctx.save();
-          ctx.globalAlpha = p.opacity;
+          ctx.globalAlpha = p.opacity * p.depth;
           ctx.beginPath();
           ctx.lineWidth = p.r / 2;
           ctx.strokeStyle = p.color;
           ctx.fillStyle = p.color;
           
-          // Draw confetti as rectangles for better visibility
+          // Scale based on depth
+          const scale = p.depth;
           ctx.translate(p.x + p.tilt, p.y);
           ctx.rotate(p.tiltAngle);
+          ctx.scale(scale, scale);
           ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r);
           
           ctx.restore();
 
           p.tiltAngle += p.tiltAngleIncremental;
-          p.y += (Math.cos(p.d) + 1 + p.r / 3) / 2;
+          p.y += (Math.cos(p.d) + 1 + p.r / 3) / 2 * p.depth;
           p.tilt = Math.sin(p.tiltAngle - p.r / 3) * 12;
 
           if (p.y > canvas.height) {
@@ -136,7 +231,7 @@ function App() {
     }
   }, [stage, showConfetti]);
 
-  // Fireworks animation
+  // Enhanced Fireworks animation with sparkle bursts
   useEffect(() => {
     if (stage === 'birthday' && showFireworks && fireworksCanvasRef.current) {
       const canvas = fireworksCanvasRef.current;
@@ -147,41 +242,73 @@ function App() {
       canvas.height = window.innerHeight;
 
       const fireworks = [];
+      const sparkleBursts = [];
       let fireworkTimer = 0;
+      let sparkleTimer = 0;
 
       const createFirework = () => {
         const x = Math.random() * canvas.width;
         const y = Math.random() * (canvas.height * 0.6) + 50;
         const particles = [];
         
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 40; i++) {
           particles.push({
             x: x,
             y: y,
-            vx: (Math.random() - 0.5) * 8,
-            vy: (Math.random() - 0.5) * 8,
-            life: 60,
-            maxLife: 60,
+            vx: (Math.random() - 0.5) * 10,
+            vy: (Math.random() - 0.5) * 10,
+            life: 80,
+            maxLife: 80,
             color: `hsl(${Math.random() * 360}, 100%, 70%)`
           });
         }
         
-        fireworks.push({ particles, life: 60 });
+        fireworks.push({ particles, life: 80 });
+      };
+
+      const createSparkleBurst = () => {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const particles = [];
+        
+        for (let i = 0; i < 15; i++) {
+          particles.push({
+            x: x,
+            y: y,
+            vx: (Math.random() - 0.5) * 4,
+            vy: (Math.random() - 0.5) * 4,
+            life: 40,
+            maxLife: 40,
+            color: `hsl(${Math.random() * 60 + 40}, 90%, 80%)`
+          });
+        }
+        
+        sparkleBursts.push({ particles, life: 40 });
       };
 
       const drawFireworks = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         fireworkTimer++;
+        sparkleTimer++;
+        
         if (fireworkTimer % 40 === 0 && Math.random() < 0.7) {
           createFirework();
         }
+        
+        // Create sparkle bursts every 6-10 seconds randomly
+        if (sparkleTimer % (Math.floor(Math.random() * 240) + 360) === 0) {
+          createSparkleBurst();
+        }
 
+        // Draw fireworks
         fireworks.forEach((firework, fireworkIndex) => {
           firework.particles.forEach((particle, particleIndex) => {
             ctx.save();
             ctx.globalAlpha = particle.life / particle.maxLife;
             ctx.fillStyle = particle.color;
+            ctx.shadowBlur = 5;
+            ctx.shadowColor = particle.color;
             ctx.beginPath();
             ctx.arc(particle.x, particle.y, 3, 0, Math.PI * 2);
             ctx.fill();
@@ -199,6 +326,43 @@ function App() {
 
           if (firework.particles.length === 0) {
             fireworks.splice(fireworkIndex, 1);
+          }
+        });
+
+        // Draw sparkle bursts
+        sparkleBursts.forEach((burst, burstIndex) => {
+          burst.particles.forEach((particle, particleIndex) => {
+            ctx.save();
+            ctx.globalAlpha = particle.life / particle.maxLife;
+            ctx.fillStyle = particle.color;
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = particle.color;
+            
+            // Draw as sparkle star
+            ctx.translate(particle.x, particle.y);
+            ctx.beginPath();
+            for (let i = 0; i < 4; i++) {
+              ctx.lineTo(0, 4);
+              ctx.rotate(Math.PI / 4);
+              ctx.lineTo(0, 2);
+              ctx.rotate(Math.PI / 4);
+            }
+            ctx.fill();
+            ctx.restore();
+
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+            particle.vx *= 0.98;
+            particle.vy *= 0.98;
+            particle.life--;
+
+            if (particle.life <= 0) {
+              burst.particles.splice(particleIndex, 1);
+            }
+          });
+
+          if (burst.particles.length === 0) {
+            sparkleBursts.splice(burstIndex, 1);
           }
         });
 
@@ -373,7 +537,18 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen relative overflow-hidden ${stage === 'birthday' ? 'birthday-magical-background' : 'bg-black'}`} onClick={enableAudio}>
+    <div 
+      className={`min-h-screen relative overflow-hidden ${stage === 'birthday' ? 'birthday-magical-background' : 'bg-black'}`} 
+      onClick={enableAudio}
+      style={stage === 'birthday' ? {
+        background: `linear-gradient(135deg at ${mousePosition.x}% ${mousePosition.y}%, 
+          #ffecd2 0%, 
+          #fcb69f 25%, 
+          #ff9a9e 50%, 
+          #fecfef 75%, 
+          #fecfef 100%)`
+      } : undefined}
+    >
       {/* Film grain overlay */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div className="film-grain"></div>
@@ -382,16 +557,22 @@ function App() {
       {/* Birthday Stage - Enhanced Magical Interface */}
       {stage === 'birthday' && (
         <>
+          {/* Sparkle Particles Canvas */}
+          <canvas
+            ref={sparkleCanvasRef}
+            className="fixed top-0 left-0 w-full h-full pointer-events-none z-10"
+          />
+
           {/* Bokeh Background Effects */}
           <div className="bokeh-container">
-            {[...Array(20)].map((_, i) => (
+            {[...Array(25)].map((_, i) => (
               <div key={i} className={`bokeh bokeh-${i}`}></div>
             ))}
           </div>
 
           {/* Floating Sparkles */}
           <div className="floating-sparkles">
-            {[...Array(15)].map((_, i) => (
+            {[...Array(20)].map((_, i) => (
               <div key={i} className={`floating-sparkle sparkle-${i}`}>✨</div>
             ))}
           </div>
@@ -412,13 +593,23 @@ function App() {
             />
           )}
 
-          {/* Enhanced Letter Box Banner */}
+          {/* Enhanced Letter Box Banner with Rat Mascot */}
           {showBirthdayBanner && (
             <div className="enhanced-birthday-banner">
               <div className="banner-row">
                 {['H', 'A', 'P', 'P', 'Y', ' ', 'B', 'I', 'R', 'T', 'H', 'D', 'A', 'Y'].map((letter, index) => (
                   <div key={index} className={`enhanced-letter-tile ${letter === ' ' ? 'space' : ''}`}>
                     {letter !== ' ' ? letter : ''}
+                    {/* Add rat mascot peeking behind the 'P' */}
+                    {letter === 'P' && index === 3 && (
+                      <div className="rat-mascot-peek">
+                        <img 
+                          src="/chuiya-rat.png" 
+                          alt="Rat mascot" 
+                          className="mascot-image"
+                        />
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -427,6 +618,12 @@ function App() {
                   <div key={index} className="enhanced-letter-tile enhanced-letter-tile-pink">
                     {letter}
                   </div>
+                ))}
+              </div>
+              {/* Banner sparkles */}
+              <div className="banner-sparkles">
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className={`banner-sparkle banner-sparkle-${i}`}>✨</div>
                 ))}
               </div>
             </div>
@@ -455,29 +652,40 @@ function App() {
               )}
             </div>
             <div className="cake-click-hint">
-              {!candlesBlown ? 'Click to blow candles! 🕯️' : 'Wish granted! 🌟'}
+              {!candlesBlown ? 'Click to blow candles! 🕯️' : 'Make a wish, Chuiyaa! ✨'}
             </div>
           </div>
 
-          {/* Special Photo Balloon */}
+          {/* Special Photo Balloon with Enhanced Animation */}
           {showPhotoBalloon && (
             <div className="special-photo-balloon">
               <div className="photo-balloon-container">
                 <div className="photo-circle">
                   <div className="placeholder-photo">📸</div>
+                  {/* Subtle glow effect */}
+                  <div className="photo-glow"></div>
                 </div>
                 <div className="photo-caption">Best day, best person 🥹💖</div>
-                <div className="balloon-ribbon"></div>
+                <div className="balloon-ribbon-tail"></div>
+                {/* Photo balloon sparkles */}
+                <div className="photo-sparkles">
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i} className={`photo-sparkle photo-sparkle-${i}`}>✨</div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
 
-          {/* Enhanced Floating Balloons */}
+          {/* Enhanced Floating Balloons with Random Movement */}
           {showBalloons && (
             <div className="enhanced-balloons-container">
-              {[...Array(15)].map((_, i) => (
+              {[...Array(20)].map((_, i) => (
                 <div key={i} className={`enhanced-balloon enhanced-balloon-${i}`}>
-                  <div className="balloon-body"></div>
+                  <div className="balloon-body">
+                    <div className="balloon-highlight"></div>
+                    <div className="balloon-shadow"></div>
+                  </div>
                   <div className="balloon-ribbon-string"></div>
                 </div>
               ))}
