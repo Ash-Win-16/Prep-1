@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Heart, Sparkles, Gift } from 'lucide-react';
 
 function App() {
-  const [stage, setStage] = useState<'countdown' | 'spotlight' | 'curtains' | 'reveal' | 'birthday'>('countdown');
+  const [stage, setStage] = useState<'countdown' | 'spotlight' | 'curtains' | 'reveal' | 'birthday' | 'surprise'>('countdown');
   const [countdown, setCountdown] = useState(5);
   const [showRat, setShowRat] = useState(false);
   const [showSpeechBubble, setShowSpeechBubble] = useState(false);
@@ -21,14 +21,25 @@ function App() {
   const [showFireworks, setShowFireworks] = useState(false);
   const [candlesBlown, setCandlesBlown] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  
+  // New surprise scene states
+  const [showSurpriseButton, setShowSurpriseButton] = useState(false);
+  const [isGlitching, setIsGlitching] = useState(false);
+  const [showSurpriseRat, setShowSurpriseRat] = useState(false);
+  const [showSurpriseSpeech, setShowSurpriseSpeech] = useState(false);
+  const [showEnvelope, setShowEnvelope] = useState(false);
+  const [showLetterButton, setShowLetterButton] = useState(false);
+  const [showLetterContent, setShowLetterContent] = useState(false);
 
   // Canvas refs for effects
   const confettiCanvasRef = useRef<HTMLCanvasElement>(null);
   const fireworksCanvasRef = useRef<HTMLCanvasElement>(null);
   const sparkleCanvasRef = useRef<HTMLCanvasElement>(null);
+  const surpriseSparkleCanvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>();
   const fireworksAnimationRef = useRef<number>();
   const sparkleAnimationRef = useRef<number>();
+  const surpriseSparkleAnimationRef = useRef<number>();
 
   // Audio refs
   const countdownAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -36,6 +47,7 @@ function App() {
   const curtainOpenAudioRef = useRef<HTMLAudioElement | null>(null);
   const birthdayMusicRef = useRef<HTMLAudioElement | null>(null);
   const blowCandlesAudioRef = useRef<HTMLAudioElement | null>(null);
+  const glitchAudioRef = useRef<HTMLAudioElement | null>(null);
 
   // Mouse movement for parallax effect
   useEffect(() => {
@@ -46,7 +58,7 @@ function App() {
       });
     };
 
-    if (stage === 'birthday') {
+    if (stage === 'birthday' || stage === 'surprise') {
       window.addEventListener('mousemove', handleMouseMove);
       return () => window.removeEventListener('mousemove', handleMouseMove);
     }
@@ -60,6 +72,7 @@ function App() {
     curtainOpenAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/ta-da.wav');
     birthdayMusicRef.current = new Audio('https://www.soundjay.com/misc/sounds/happy-birthday-song.wav');
     blowCandlesAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/blow-candles.wav');
+    glitchAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/glitch-sound.wav');
 
     // Set audio properties
     if (countdownAudioRef.current) {
@@ -79,10 +92,13 @@ function App() {
     if (blowCandlesAudioRef.current) {
       blowCandlesAudioRef.current.volume = 0.7;
     }
+    if (glitchAudioRef.current) {
+      glitchAudioRef.current.volume = 0.6;
+    }
 
     return () => {
       // Cleanup audio
-      [countdownAudioRef, ratEntranceAudioRef, curtainOpenAudioRef, birthdayMusicRef, blowCandlesAudioRef].forEach(ref => {
+      [countdownAudioRef, ratEntranceAudioRef, curtainOpenAudioRef, birthdayMusicRef, blowCandlesAudioRef, glitchAudioRef].forEach(ref => {
         if (ref.current) {
           ref.current.pause();
           ref.current = null;
@@ -90,6 +106,77 @@ function App() {
       });
     };
   }, []);
+
+  // Surprise Scene Sparkle Background
+  useEffect(() => {
+    if (stage === 'surprise' && surpriseSparkleCanvasRef.current) {
+      const canvas = surpriseSparkleCanvasRef.current;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const sparkles = Array.from({ length: 30 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 2 + 1,
+        opacity: Math.random() * 0.6 + 0.2,
+        speed: Math.random() * 0.3 + 0.1,
+        angle: Math.random() * Math.PI * 2,
+        color: `hsl(${Math.random() * 60 + 200}, 70%, 80%)`, // Cool sparkle colors
+        twinkle: Math.random() * 0.02 + 0.01
+      }));
+
+      const drawSparkles = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        sparkles.forEach(sparkle => {
+          ctx.save();
+          ctx.globalAlpha = sparkle.opacity;
+          ctx.fillStyle = sparkle.color;
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = sparkle.color;
+          
+          // Draw sparkle as a star shape
+          ctx.translate(sparkle.x, sparkle.y);
+          ctx.rotate(sparkle.angle);
+          ctx.beginPath();
+          for (let i = 0; i < 4; i++) {
+            ctx.lineTo(0, sparkle.size);
+            ctx.rotate(Math.PI / 4);
+            ctx.lineTo(0, sparkle.size / 2);
+            ctx.rotate(Math.PI / 4);
+          }
+          ctx.fill();
+          ctx.restore();
+
+          // Update sparkle properties
+          sparkle.y += sparkle.speed;
+          sparkle.angle += 0.015;
+          sparkle.opacity += Math.sin(Date.now() * sparkle.twinkle) * 0.01;
+          
+          if (sparkle.opacity > 0.8) sparkle.opacity = 0.8;
+          if (sparkle.opacity < 0.1) sparkle.opacity = 0.1;
+
+          if (sparkle.y > canvas.height + 10) {
+            sparkle.y = -10;
+            sparkle.x = Math.random() * canvas.width;
+          }
+        });
+
+        surpriseSparkleAnimationRef.current = requestAnimationFrame(drawSparkles);
+      };
+
+      drawSparkles();
+
+      return () => {
+        if (surpriseSparkleAnimationRef.current) {
+          cancelAnimationFrame(surpriseSparkleAnimationRef.current);
+        }
+      };
+    }
+  }, [stage]);
 
   // Enhanced Sparkle Particles Background
   useEffect(() => {
@@ -428,6 +515,16 @@ function App() {
     }
   }, [stage, countdown]);
 
+  // Birthday stage auto-transition to surprise
+  useEffect(() => {
+    if (stage === 'birthday' && showBirthdayBanner) {
+      // Show surprise button after all birthday animations settle
+      setTimeout(() => {
+        setShowSurpriseButton(true);
+      }, 45000); // After 45 seconds of birthday celebration
+    }
+  }, [stage, showBirthdayBanner]);
+
   const handleContinue = () => {
     setShowSecondSpeech(false);
     setShowRibbonButton(false);
@@ -525,9 +622,62 @@ function App() {
     }
   };
 
+  const handleSurpriseClick = () => {
+    setShowSurpriseButton(false);
+    setIsGlitching(true);
+    
+    // Play glitch sound
+    if (glitchAudioRef.current) {
+      glitchAudioRef.current.play().catch(() => {
+        console.log('Audio play failed');
+      });
+    }
+    
+    // Stop birthday music
+    if (birthdayMusicRef.current) {
+      birthdayMusicRef.current.pause();
+    }
+    
+    // After glitch effect (2.5 seconds)
+    setTimeout(() => {
+      setIsGlitching(false);
+      setStage('surprise');
+      
+      // Rat walks in under spotlight
+      setTimeout(() => {
+        setShowSurpriseRat(true);
+        // Play rat entrance sound
+        if (ratEntranceAudioRef.current) {
+          ratEntranceAudioRef.current.play().catch(() => {
+            console.log('Audio play failed');
+          });
+        }
+      }, 1000);
+      
+      // Speech bubble appears
+      setTimeout(() => {
+        setShowSurpriseSpeech(true);
+      }, 2500);
+      
+      // Envelope floats in
+      setTimeout(() => {
+        setShowEnvelope(true);
+      }, 5000);
+      
+      // Letter button appears
+      setTimeout(() => {
+        setShowLetterButton(true);
+      }, 6500);
+    }, 2500);
+  };
+
+  const handleLetterClick = () => {
+    setShowLetterContent(true);
+  };
+
   // Enable audio on first user interaction
   const enableAudio = () => {
-    [countdownAudioRef, ratEntranceAudioRef, curtainOpenAudioRef, birthdayMusicRef, blowCandlesAudioRef].forEach(ref => {
+    [countdownAudioRef, ratEntranceAudioRef, curtainOpenAudioRef, birthdayMusicRef, blowCandlesAudioRef, glitchAudioRef].forEach(ref => {
       if (ref.current) {
         ref.current.load();
       }
@@ -536,7 +686,11 @@ function App() {
 
   return (
     <div 
-      className={`min-h-screen relative overflow-hidden ${stage === 'birthday' ? 'birthday-magical-background' : 'bg-black'}`} 
+      className={`min-h-screen relative overflow-hidden ${
+        stage === 'birthday' ? 'birthday-magical-background' : 
+        stage === 'surprise' ? 'surprise-background' : 
+        'bg-black'
+      } ${isGlitching ? 'glitch-effect' : ''}`} 
       onClick={enableAudio}
       style={stage === 'birthday' ? {
         background: `linear-gradient(135deg at ${mousePosition.x}% ${mousePosition.y}%, 
@@ -545,12 +699,132 @@ function App() {
           #ff9a9e 50%, 
           #fecfef 75%, 
           #fecfef 100%)`
+      } : stage === 'surprise' ? {
+        background: `linear-gradient(135deg at ${mousePosition.x}% ${mousePosition.y}%, 
+          #1a1a2e 0%, 
+          #16213e 25%, 
+          #0f3460 50%, 
+          #533483 75%, 
+          #1a1a2e 100%)`
       } : undefined}
     >
       {/* Film grain overlay */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div className="film-grain"></div>
       </div>
+
+      {/* Glitch Overlay */}
+      {isGlitching && (
+        <div className="glitch-overlay">
+          <div className="glitch-layer glitch-layer-1"></div>
+          <div className="glitch-layer glitch-layer-2"></div>
+          <div className="glitch-layer glitch-layer-3"></div>
+        </div>
+      )}
+
+      {/* Surprise Scene */}
+      {stage === 'surprise' && (
+        <>
+          {/* Surprise Sparkle Canvas */}
+          <canvas
+            ref={surpriseSparkleCanvasRef}
+            className="fixed top-0 left-0 w-full h-full pointer-events-none z-10"
+          />
+
+          {/* Spotlight effect for surprise scene */}
+          <div className="spotlight-container">
+            <div className="spotlight surprise-spotlight"></div>
+            <div className="spotlight-particles">
+              {[...Array(12)].map((_, i) => (
+                <div key={i} className={`particle particle-${i}`}></div>
+              ))}
+            </div>
+          </div>
+
+          {/* Surprise Rat Character */}
+          {showSurpriseRat && (
+            <div className="surprise-rat-container">
+              <img 
+                src="/chuiya-rat.png" 
+                alt="Cute Chuiya rat character" 
+                className="surprise-rat-image"
+              />
+              
+              {/* Magic sparkles around rat */}
+              <div className="magic-sparkles celebration">
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className={`sparkle sparkle-celebration-${i}`}>✨</div>
+                ))}
+              </div>
+
+              {/* Surprise Speech bubble */}
+              {showSurpriseSpeech && (
+                <div className="surprise-speech-bubble">
+                  <div className="speech-content">
+                    <Sparkles className="speech-icon" />
+                    <p>Oyee Chuiyaa...</p>
+                    <p>Abhi asli surprise baaki hai!</p>
+                  </div>
+                  <div className="surprise-speech-tail"></div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Animated Envelope */}
+          {showEnvelope && (
+            <div className="floating-envelope">
+              <div className="envelope">
+                <div className="envelope-body">💌</div>
+                <div className="envelope-sparkles">
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i} className={`envelope-sparkle envelope-sparkle-${i}`}>✨</div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Open Letter Button */}
+          {showLetterButton && (
+            <div className="letter-button-container">
+              <button 
+                onClick={handleLetterClick}
+                className="letter-button"
+              >
+                <span>Open Letter 💌</span>
+              </button>
+            </div>
+          )}
+
+          {/* Letter Content (Placeholder) */}
+          {showLetterContent && (
+            <div className="letter-content-overlay">
+              <div className="letter-content">
+                <div className="letter-header">
+                  <h2>💌 Special Message for Chuiyaa 💌</h2>
+                </div>
+                <div className="letter-body">
+                  <p>This is where your beautiful message or gallery will go!</p>
+                  <p>You can customize this area with:</p>
+                  <ul>
+                    <li>Personal photos</li>
+                    <li>Heartfelt messages</li>
+                    <li>Memory gallery</li>
+                    <li>Video messages</li>
+                  </ul>
+                </div>
+                <button 
+                  onClick={() => setShowLetterContent(false)}
+                  className="close-letter-button"
+                >
+                  Close ✨
+                </button>
+              </div>
+            </div>
+          )}
+        </>
+      )}
 
       {/* Birthday Stage - Enhanced Magical Interface */}
       {stage === 'birthday' && (
@@ -649,7 +923,6 @@ function App() {
                 </div>
               )}
             </div>
-            {/* Removed the click hint text */}
           </div>
 
           {/* Three Special Photo Balloons with Different Captions */}
@@ -720,6 +993,18 @@ function App() {
                   <div className="balloon-ribbon-string"></div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* Surprise Button */}
+          {showSurpriseButton && (
+            <div className="surprise-button-container">
+              <button 
+                onClick={handleSurpriseClick}
+                className="surprise-button"
+              >
+                <span>Click for More 🎁</span>
+              </button>
             </div>
           )}
         </>
