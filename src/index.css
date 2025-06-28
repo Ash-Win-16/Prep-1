@@ -468,41 +468,44 @@
   }
 }
 
-/* Countdown Styles */
-.countdown-circle {
+/* Golden Yellow Countdown Styles */
+.golden-countdown-circle {
   position: relative;
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500);
+  background: linear-gradient(45deg, #ffd700, #ffed4e, #f1c40f, #f39c12);
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: pulse 2s ease-in-out infinite;
+  animation: goldenPulse 2s ease-in-out infinite;
   box-shadow: 
-    0 0 50px rgba(255, 107, 157, 0.6),
-    0 0 100px rgba(255, 107, 157, 0.4),
-    0 0 150px rgba(255, 107, 157, 0.2);
+    0 0 50px rgba(255, 215, 0, 0.8),
+    0 0 100px rgba(255, 215, 0, 0.6),
+    0 0 150px rgba(255, 215, 0, 0.4),
+    inset 0 0 30px rgba(255, 255, 255, 0.3);
 }
 
-.countdown-glow {
+.golden-countdown-glow {
   position: absolute;
-  top: -10px;
-  left: -10px;
-  right: -10px;
-  bottom: -10px;
+  top: -15px;
+  left: -15px;
+  right: -15px;
+  bottom: -15px;
   border-radius: 50%;
-  background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500);
-  filter: blur(20px);
-  opacity: 0.7;
-  animation: rotate 4s linear infinite;
+  background: linear-gradient(45deg, #ffd700, #ffed4e, #f1c40f, #f39c12);
+  filter: blur(25px);
+  opacity: 0.8;
+  animation: goldenRotate 4s linear infinite;
 }
 
 .countdown-number {
   font-size: 4rem;
   font-weight: bold;
-  color: white;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  color: #8b4513;
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 10px rgba(255, 255, 255, 0.5);
   z-index: 1;
 }
 
@@ -513,9 +516,10 @@
   transform: translateX(-50%);
   font-size: 1.5rem;
   font-weight: bold;
-  color: #ff6b9d;
+  color: #ffd700;
   text-align: center;
   animation: bounce 2s ease-in-out infinite;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .musical-notes {
@@ -532,6 +536,7 @@
   font-size: 2rem;
   color: #f8b500;
   animation: noteFloat 3s ease-in-out infinite;
+  text-shadow: 0 0 10px rgba(248, 181, 0, 0.8);
 }
 
 .note-1 { left: 10%; animation-delay: 0s; }
@@ -539,12 +544,12 @@
 .note-3 { right: 30%; animation-delay: 1s; }
 .note-4 { right: 10%; animation-delay: 1.5s; }
 
-@keyframes pulse {
+@keyframes goldenPulse {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  50% { transform: scale(1.08); }
 }
 
-@keyframes rotate {
+@keyframes goldenRotate {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
@@ -1137,9 +1142,10 @@
 .gift-sparkle-10 { top: 30%; left: 70%; animation-delay: 3s; }
 .gift-sparkle-11 { bottom: 60%; right: 50%; animation-delay: 3.3s; }
 
-.click-hint {
+/* Click hint positioned below gift box */
+.click-hint-below {
   position: absolute;
-  bottom: -60px;
+  top: 140px;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.8);
@@ -1148,6 +1154,8 @@
   border-radius: 20px;
   font-size: 0.9rem;
   animation: hintBounce 2s ease-in-out infinite;
+  white-space: nowrap;
+  z-index: 15;
 }
 
 @keyframes giftBoxFall {
@@ -1383,7 +1391,7 @@
   50% { transform: translateY(-10px) rotate(180deg); opacity: 1; }
 }
 
-/* Interactive Birthday Cake */
+/* Interactive Birthday Cake - BIGGER AND BETTER */
 .interactive-cake-container {
   position: fixed;
   bottom: 15%;
@@ -1394,28 +1402,31 @@
 
 .interactive-birthday-cake {
   position: relative;
-  font-size: 4rem;
+  font-size: 6rem; /* Increased from 4rem to 6rem */
   cursor: pointer;
   transition: all 0.3s ease;
   animation: cakeGlow 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(255, 107, 157, 0.6));
 }
 
 .interactive-birthday-cake:hover {
-  transform: scale(1.1);
+  transform: scale(1.15); /* Increased hover scale */
+  filter: drop-shadow(0 0 30px rgba(255, 107, 157, 0.8));
 }
 
 .candle-flames {
   position: absolute;
-  top: -20px;
+  top: -30px; /* Adjusted for bigger cake */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 10px;
+  gap: 15px; /* Increased gap */
 }
 
 .flame {
-  font-size: 1.5rem;
+  font-size: 2rem; /* Increased flame size */
   animation: flameFlicker 1s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(255, 165, 0, 0.8));
 }
 
 .flame-1 { animation-delay: 0s; }
@@ -1424,15 +1435,15 @@
 
 .puff-effects {
   position: absolute;
-  top: -30px;
+  top: -40px; /* Adjusted for bigger cake */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 15px;
+  gap: 20px; /* Increased gap */
 }
 
 .puff {
-  font-size: 1.8rem;
+  font-size: 2.5rem; /* Increased puff size */
   animation: puffDisappear 2s ease-out;
 }
 
@@ -1441,19 +1452,25 @@
 .puff-3 { animation-delay: 0.4s; }
 
 @keyframes cakeGlow {
-  0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 107, 157, 0.5)); }
-  50% { filter: drop-shadow(0 0 20px rgba(255, 107, 157, 0.8)); }
+  0%, 100% { 
+    filter: drop-shadow(0 0 20px rgba(255, 107, 157, 0.6));
+    transform: scale(1);
+  }
+  50% { 
+    filter: drop-shadow(0 0 30px rgba(255, 107, 157, 0.9));
+    transform: scale(1.02);
+  }
 }
 
 @keyframes flameFlicker {
   0%, 100% { transform: scale(1) rotate(-2deg); }
-  50% { transform: scale(1.1) rotate(2deg); }
+  50% { transform: scale(1.15) rotate(2deg); }
 }
 
 @keyframes puffDisappear {
   0% { opacity: 0; transform: scale(0.5) translateY(0); }
-  50% { opacity: 1; transform: scale(1) translateY(-10px); }
-  100% { opacity: 0; transform: scale(1.2) translateY(-20px); }
+  50% { opacity: 1; transform: scale(1) translateY(-15px); }
+  100% { opacity: 0; transform: scale(1.3) translateY(-30px); }
 }
 
 /* Special Photo Balloons */
@@ -1737,7 +1754,7 @@
   }
   
   .interactive-birthday-cake {
-    font-size: 3rem;
+    font-size: 4rem; /* Responsive size for mobile */
   }
   
   .photo-circle {
@@ -1760,7 +1777,7 @@
     padding: 15px;
   }
   
-  .countdown-circle {
+  .golden-countdown-circle {
     width: 150px;
     height: 150px;
   }

@@ -951,7 +951,7 @@ function App() {
             </div>
           )}
 
-          {/* Interactive 3D Birthday Cake - STAYS VISIBLE */}
+          {/* Interactive 3D Birthday Cake - BIGGER AND BETTER */}
           <div className="interactive-cake-container">
             <div 
               className={`interactive-birthday-cake ${candlesBlown ? 'candles-blown' : ''}`}
@@ -1060,12 +1060,12 @@ function App() {
         </>
       )}
 
-      {/* Countdown Stage */}
+      {/* Countdown Stage - GOLDEN YELLOW COUNTDOWN */}
       {stage === 'countdown' && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="relative">
-            <div className="countdown-circle">
-              <div className="countdown-glow"></div>
+            <div className="golden-countdown-circle">
+              <div className="golden-countdown-glow"></div>
               <div className="countdown-number">
                 {countdown || '✨'}
               </div>
@@ -1201,12 +1201,12 @@ function App() {
               </div>
             )}
 
-            {/* Second Speech bubble - only in curtains stage */}
+            {/* Second Speech bubble - UPDATED TEXT */}
             {stage === 'curtains' && showSecondSpeech && (
               <div className="speech-bubble">
                 <div className="speech-content">
                   <Sparkles className="speech-icon" />
-                  <p>Oyee isse Open kerke dekh ....</p>
+                  <p>Oyee isse Open toh ker ...</p>
                   <p>kya attitude dikha rhi !!!!</p>
                 </div>
                 <div className="speech-tail"></div>
@@ -1263,9 +1263,9 @@ function App() {
                 </div>
               </div>
               
-              {/* Click hint */}
+              {/* Click hint - POSITIONED BELOW GIFT BOX */}
               {showClickHint && !giftOpened && (
-                <div className="click-hint">
+                <div className="click-hint-below">
                   <p>Click on the gift box! 🎁</p>
                 </div>
               )}
