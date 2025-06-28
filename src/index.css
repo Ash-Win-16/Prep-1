@@ -437,7 +437,7 @@
   }
 }
 
-/* Simple Countdown Styles */
+/* SIMPLE COUNTDOWN STYLES - NO ANIMATIONS */
 .simple-countdown-circle {
   position: relative;
   width: 200px;
@@ -448,19 +448,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 
-    0 0 30px rgba(255, 215, 0, 0.5),
-    inset 0 0 20px rgba(255, 215, 0, 0.1);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  /* REMOVED ALL ANIMATIONS */
 }
 
 .countdown-number {
   font-size: 4rem;
   font-weight: bold;
   color: #ffd700;
-  text-shadow: 
-    0 0 10px rgba(255, 215, 0, 0.8),
-    0 0 20px rgba(255, 215, 0, 0.6);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
   z-index: 1;
+  /* REMOVED ALL ANIMATIONS */
 }
 
 .countdown-text {
@@ -473,6 +471,7 @@
   color: #ffd700;
   text-align: center;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  /* REMOVED ALL ANIMATIONS */
 }
 
 /* Birthday Background */
@@ -762,18 +761,18 @@
   z-index: 20;
 }
 
-/* Fixed Curtain Speech Bubble */
+/* Fixed Curtain Speech Bubble - IMPROVED POSITIONING */
 .curtain-speech-bubble {
   position: absolute;
   top: -140px;
-  left: -250px;
+  left: -280px; /* Moved further left */
   background: white;
   border-radius: 20px;
   padding: 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   animation: speechBubbleAppear 1s ease-out;
   max-width: 250px;
-  z-index: 25;
+  z-index: 25; /* Higher z-index */
 }
 
 .surprise-speech-bubble {
@@ -1155,10 +1154,10 @@
 .gift-sparkle-10 { top: 30%; left: 70%; animation-delay: 3s; }
 .gift-sparkle-11 { bottom: 60%; right: 50%; animation-delay: 3.3s; }
 
-/* Click hint positioned below gift box */
+/* Click hint positioned below gift box - FIXED POSITIONING */
 .click-hint-below {
   position: absolute;
-  top: 140px;
+  top: 140px; /* Below the gift box */
   left: 50%;
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.8);
