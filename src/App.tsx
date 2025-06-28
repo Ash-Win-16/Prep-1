@@ -29,7 +29,8 @@ function App() {
   const [showSurpriseSpeech, setShowSurpriseSpeech] = useState(false);
   const [showEnvelope, setShowEnvelope] = useState(false);
   const [showLetterButton, setShowLetterButton] = useState(false);
-  const [showLetterContent, setShowLetterContent] = useState(false);
+  const [showBirthdayCard, setShowBirthdayCard] = useState(false);
+  const [cardOpened, setCardOpened] = useState(false);
 
   // Canvas refs for effects
   const confettiCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -650,7 +651,19 @@ function App() {
   };
 
   const handleLetterClick = () => {
-    setShowLetterContent(true);
+    setShowBirthdayCard(true);
+    // Add a small delay before opening the card for better effect
+    setTimeout(() => {
+      setCardOpened(true);
+    }, 500);
+  };
+
+  const handleCloseCard = () => {
+    setCardOpened(false);
+    // Wait for close animation before hiding the card
+    setTimeout(() => {
+      setShowBirthdayCard(false);
+    }, 800);
   };
 
   // Enable audio on first user interaction
@@ -697,6 +710,92 @@ function App() {
           <div className="glitch-layer glitch-layer-1"></div>
           <div className="glitch-layer glitch-layer-2"></div>
           <div className="glitch-layer glitch-layer-3"></div>
+        </div>
+      )}
+
+      {/* Birthday Card Modal */}
+      {showBirthdayCard && (
+        <div className="birthday-card-overlay">
+          <div className="birthday-card-backdrop" onClick={handleCloseCard}></div>
+          <div className={`birthday-card-container ${cardOpened ? 'card-opened' : ''}`}>
+            {/* Card Cover (Front) */}
+            <div className="birthday-card-cover">
+              <div className="card-cover-content">
+                <div className="card-cover-decoration">
+                  <div className="cover-sparkles">
+                    {[...Array(8)].map((_, i) => (
+                      <div key={i} className={`cover-sparkle cover-sparkle-${i}`}>✨</div>
+                    ))}
+                  </div>
+                  <div className="cover-title">Happy Birthday</div>
+                  <div className="cover-subtitle">Chuiyaa</div>
+                  <div className="cover-heart">💖</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Card Interior */}
+            <div className="birthday-card-interior">
+              {/* Left Side - Photos */}
+              <div className="card-left-side">
+                <div className="card-photos-section">
+                  <div className="photos-title">Special Memories</div>
+                  
+                  {/* Photo 1 */}
+                  <div className="card-photo-frame">
+                    <div className="photo-placeholder">
+                      <div className="photo-icon">📸</div>
+                      <div className="photo-text">Your Photo Here</div>
+                    </div>
+                    <div className="photo-border"></div>
+                  </div>
+
+                  {/* Photo 2 */}
+                  <div className="card-photo-frame">
+                    <div className="photo-placeholder">
+                      <div className="photo-icon">📸</div>
+                      <div className="photo-text">Your Photo Here</div>
+                    </div>
+                    <div className="photo-border"></div>
+                  </div>
+
+                  {/* Birthday Caption */}
+                  <div className="birthday-caption">
+                    <div className="caption-text">Happy Birthday Chuiya!</div>
+                    <div className="caption-hearts">💕 💕 💕</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Side - Message */}
+              <div className="card-right-side">
+                <div className="card-message-section">
+                  <div className="message-title">Special Message</div>
+                  <div className="message-content">
+                    <div className="message-placeholder">
+                      <p>Your heartfelt message will go here...</p>
+                      <p>This is where you can write:</p>
+                      <ul>
+                        <li>• Personal wishes</li>
+                        <li>• Favorite memories</li>
+                        <li>• Special thoughts</li>
+                        <li>• Birthday blessings</li>
+                      </ul>
+                      <div className="message-signature">
+                        <p>With love,</p>
+                        <p>Your Name ✨</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Close Button */}
+            <button className="card-close-button" onClick={handleCloseCard}>
+              <span>Close Card ✨</span>
+            </button>
+          </div>
         </div>
       )}
 
@@ -772,33 +871,6 @@ function App() {
               >
                 <span>Open Letter</span>
               </button>
-            </div>
-          )}
-
-          {/* Letter Content (Placeholder) */}
-          {showLetterContent && (
-            <div className="letter-content-overlay">
-              <div className="letter-content">
-                <div className="letter-header">
-                  <h2>💌 Special Message for Chuiyaa 💌</h2>
-                </div>
-                <div className="letter-body">
-                  <p>This is where your beautiful message or gallery will go!</p>
-                  <p>You can customize this area with:</p>
-                  <ul>
-                    <li>Personal photos</li>
-                    <li>Heartfelt messages</li>
-                    <li>Memory gallery</li>
-                    <li>Video messages</li>
-                  </ul>
-                </div>
-                <button 
-                  onClick={() => setShowLetterContent(false)}
-                  className="close-letter-button"
-                >
-                  Close ✨
-                </button>
-              </div>
             </div>
           )}
         </>
