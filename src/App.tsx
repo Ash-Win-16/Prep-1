@@ -678,11 +678,19 @@ function App() {
   return (
     <div 
       className={`min-h-screen relative overflow-hidden ${
-        stage === 'birthday' ? 'birthday-background' : 
+        stage === 'birthday' ? 'birthday-magical-background' : 
         stage === 'surprise' ? 'surprise-background' : 
         'bg-black'
       } ${isGlitching ? 'glitch-effect' : ''}`} 
       onClick={enableAudio}
+      style={stage === 'birthday' ? {
+        background: `linear-gradient(135deg at ${mousePosition.x}% ${mousePosition.y}%, 
+          #ffecd2 0%, 
+          #fcb69f 25%, 
+          #ff9a9e 50%, 
+          #fecfef 75%, 
+          #fecfef 100%)`
+      } : undefined}
     >
       {/* Film grain overlay */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
@@ -880,6 +888,20 @@ function App() {
             className="fixed top-0 left-0 w-full h-full pointer-events-none z-10"
           />
 
+          {/* Bokeh Background Effects */}
+          <div className="bokeh-container">
+            {[...Array(25)].map((_, i) => (
+              <div key={i} className={`bokeh bokeh-${i}`}></div>
+            ))}
+          </div>
+
+          {/* Floating Sparkles */}
+          <div className="floating-sparkles">
+            {[...Array(20)].map((_, i) => (
+              <div key={i} className={`floating-sparkle sparkle-${i}`}>✨</div>
+            ))}
+          </div>
+
           {/* Confetti Canvas */}
           {showConfetti && (
             <canvas
@@ -1041,11 +1063,12 @@ function App() {
         </>
       )}
 
-      {/* Simple Countdown Stage */}
+      {/* ENHANCED COUNTDOWN STAGE - FROM PREVIOUS DRAFT */}
       {stage === 'countdown' && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="relative">
-            <div className="simple-countdown-circle">
+            <div className="countdown-circle">
+              <div className="countdown-glow"></div>
               <div className="countdown-number">
                 {countdown || '✨'}
               </div>
@@ -1053,6 +1076,13 @@ function App() {
             {/* Countdown text */}
             <div className="countdown-text">
               Abb Maja Aayega !!!
+            </div>
+            {/* Musical notes animation during countdown */}
+            <div className="musical-notes">
+              <div className="note note-1">♪</div>
+              <div className="note note-2">♫</div>
+              <div className="note note-3">♪</div>
+              <div className="note note-4">♫</div>
             </div>
           </div>
         </div>
@@ -1112,7 +1142,7 @@ function App() {
         </>
       )}
 
-      {/* Curtains Stage - Lights on with curtains */}
+      {/* ENHANCED CURTAINS STAGE - FROM PREVIOUS DRAFT */}
       {(stage === 'curtains' || stage === 'reveal') && (
         <>
           {/* Stage background - Night sky for reveal, lights on for curtains */}
@@ -1148,7 +1178,7 @@ function App() {
               </div>
             )}
 
-            {/* Curtains */}
+            {/* Enhanced Curtains with Better Animation */}
             {showCurtains && (
               <>
                 <div className={`curtain-left ${curtainOpen ? 'curtain-open-left' : ''}`}></div>
@@ -1174,9 +1204,9 @@ function App() {
               </div>
             )}
 
-            {/* Second Speech bubble - FIXED POSITIONING */}
+            {/* Second Speech bubble - ENHANCED FROM PREVIOUS DRAFT */}
             {stage === 'curtains' && showSecondSpeech && (
-              <div className="curtain-speech-bubble">
+              <div className="speech-bubble">
                 <div className="speech-content">
                   <Sparkles className="speech-icon" />
                   <p>Oyee isse Open kerke dekh ....</p>
@@ -1199,7 +1229,7 @@ function App() {
             )}
           </div>
 
-          {/* Ribbon Button - only in curtains stage */}
+          {/* Enhanced Ribbon Button - FROM PREVIOUS DRAFT */}
           {stage === 'curtains' && showRibbonButton && (
             <div className="ribbon-button-container">
               <button 
@@ -1211,7 +1241,7 @@ function App() {
             </div>
           )}
 
-          {/* Gift Box - only in reveal stage */}
+          {/* Enhanced Gift Box - FROM PREVIOUS DRAFT */}
           {stage === 'reveal' && showGiftBox && (
             <div className="gift-box-container">
               <div 
