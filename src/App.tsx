@@ -583,30 +583,8 @@ function App() {
         setShowBalloons(true);
       }, 2500);
       
-      // Hide confetti after animation
-      setTimeout(() => {
-        setShowConfetti(false);
-      }, 20000);
-      
-      // Hide fireworks after animation
-      setTimeout(() => {
-        setShowFireworks(false);
-      }, 25000);
-      
-      // Hide photo balloons after animation
-      setTimeout(() => {
-        setShowPhotoBalloons(false);
-      }, 30000);
-      
-      // Hide regular balloons after animation
-      setTimeout(() => {
-        setShowBalloons(false);
-      }, 35000);
-      
-      // Hide banner after celebration
-      setTimeout(() => {
-        setShowBirthdayBanner(false);
-      }, 40000);
+      // REMOVED: All the setTimeout functions that hide elements
+      // Now elements stay visible permanently
     }
   };
 
@@ -785,14 +763,14 @@ function App() {
             </div>
           )}
 
-          {/* Open Letter Button */}
+          {/* Simple Letter Button - REMOVED HEART */}
           {showLetterButton && (
             <div className="letter-button-container">
               <button 
                 onClick={handleLetterClick}
                 className="letter-button"
               >
-                <span>Open Letter 💌</span>
+                <span>Open Letter</span>
               </button>
             </div>
           )}
@@ -865,7 +843,7 @@ function App() {
             />
           )}
 
-          {/* Enhanced Letter Box Banner with Rat Mascot */}
+          {/* Enhanced Letter Box Banner with Rat Mascot - STAYS VISIBLE */}
           {showBirthdayBanner && (
             <div className="enhanced-birthday-banner">
               <div className="banner-row">
@@ -901,7 +879,7 @@ function App() {
             </div>
           )}
 
-          {/* Interactive 3D Birthday Cake */}
+          {/* Interactive 3D Birthday Cake - STAYS VISIBLE */}
           <div className="interactive-cake-container">
             <div 
               className={`interactive-birthday-cake ${candlesBlown ? 'candles-blown' : ''}`}
@@ -925,7 +903,7 @@ function App() {
             </div>
           </div>
 
-          {/* Three Special Photo Balloons with Different Captions */}
+          {/* Three Special Photo Balloons with Different Captions - STAYS VISIBLE */}
           {showPhotoBalloons && (
             <>
               {/* First Photo Balloon */}
@@ -981,7 +959,7 @@ function App() {
             </>
           )}
 
-          {/* Enhanced Floating Balloons with Random Movement */}
+          {/* Enhanced Floating Balloons with Random Movement - STAYS VISIBLE */}
           {showBalloons && (
             <div className="enhanced-balloons-container">
               {[...Array(20)].map((_, i) => (
