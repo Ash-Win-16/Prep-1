@@ -678,26 +678,11 @@ function App() {
   return (
     <div 
       className={`min-h-screen relative overflow-hidden ${
-        stage === 'birthday' ? 'birthday-magical-background' : 
+        stage === 'birthday' ? 'birthday-background' : 
         stage === 'surprise' ? 'surprise-background' : 
         'bg-black'
       } ${isGlitching ? 'glitch-effect' : ''}`} 
       onClick={enableAudio}
-      style={stage === 'birthday' ? {
-        background: `linear-gradient(135deg at ${mousePosition.x}% ${mousePosition.y}%, 
-          #ffecd2 0%, 
-          #fcb69f 25%, 
-          #ff9a9e 50%, 
-          #fecfef 75%, 
-          #fecfef 100%)`
-      } : stage === 'surprise' ? {
-        background: `linear-gradient(135deg at ${mousePosition.x}% ${mousePosition.y}%, 
-          #1a1a2e 0%, 
-          #16213e 25%, 
-          #0f3460 50%, 
-          #533483 75%, 
-          #1a1a2e 100%)`
-      } : undefined}
     >
       {/* Film grain overlay */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
@@ -879,25 +864,21 @@ function App() {
       {/* Birthday Stage - Enhanced Magical Interface */}
       {stage === 'birthday' && (
         <>
+          {/* Birthday Background Balloons */}
+          <div className="birthday-background-balloons">
+            {[...Array(15)].map((_, i) => (
+              <div key={i} className={`bg-balloon bg-balloon-${i}`}>
+                <div className="bg-balloon-body"></div>
+                <div className="bg-balloon-string"></div>
+              </div>
+            ))}
+          </div>
+
           {/* Sparkle Particles Canvas */}
           <canvas
             ref={sparkleCanvasRef}
             className="fixed top-0 left-0 w-full h-full pointer-events-none z-10"
           />
-
-          {/* Bokeh Background Effects */}
-          <div className="bokeh-container">
-            {[...Array(25)].map((_, i) => (
-              <div key={i} className={`bokeh bokeh-${i}`}></div>
-            ))}
-          </div>
-
-          {/* Floating Sparkles */}
-          <div className="floating-sparkles">
-            {[...Array(20)].map((_, i) => (
-              <div key={i} className={`floating-sparkle sparkle-${i}`}>✨</div>
-            ))}
-          </div>
 
           {/* Confetti Canvas */}
           {showConfetti && (
@@ -1060,26 +1041,18 @@ function App() {
         </>
       )}
 
-      {/* Countdown Stage - GOLDEN YELLOW COUNTDOWN */}
+      {/* Simple Countdown Stage */}
       {stage === 'countdown' && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="relative">
-            <div className="golden-countdown-circle">
-              <div className="golden-countdown-glow"></div>
+            <div className="simple-countdown-circle">
               <div className="countdown-number">
                 {countdown || '✨'}
               </div>
             </div>
             {/* Countdown text */}
             <div className="countdown-text">
-              Abb Ayega Maja !!!
-            </div>
-            {/* Musical notes animation during countdown */}
-            <div className="musical-notes">
-              <div className="note note-1">♪</div>
-              <div className="note note-2">♫</div>
-              <div className="note note-3">♪</div>
-              <div className="note note-4">♫</div>
+              Abb Maja Aayega !!!
             </div>
           </div>
         </div>
@@ -1201,12 +1174,12 @@ function App() {
               </div>
             )}
 
-            {/* Second Speech bubble - UPDATED TEXT */}
+            {/* Second Speech bubble - FIXED POSITIONING */}
             {stage === 'curtains' && showSecondSpeech && (
-              <div className="speech-bubble">
+              <div className="curtain-speech-bubble">
                 <div className="speech-content">
                   <Sparkles className="speech-icon" />
-                  <p>Oyee isse Open toh ker ...</p>
+                  <p>Oyee isse Open kerke dekh ....</p>
                   <p>kya attitude dikha rhi !!!!</p>
                 </div>
                 <div className="speech-tail"></div>
