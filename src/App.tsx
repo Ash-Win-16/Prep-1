@@ -515,13 +515,13 @@ function App() {
     }
   }, [stage, countdown]);
 
-  // Birthday stage auto-transition to surprise
+  // Birthday stage auto-transition to surprise - UPDATED TO 20 SECONDS
   useEffect(() => {
     if (stage === 'birthday' && showBirthdayBanner) {
-      // Show surprise button after all birthday animations settle
+      // Show surprise button after 20 seconds of birthday celebration
       setTimeout(() => {
         setShowSurpriseButton(true);
-      }, 45000); // After 45 seconds of birthday celebration
+      }, 20000); // Changed from 45000 to 20000 (20 seconds)
     }
   }, [stage, showBirthdayBanner]);
 
@@ -996,7 +996,7 @@ function App() {
             </div>
           )}
 
-          {/* Surprise Button */}
+          {/* Surprise Button - NOW APPEARS AFTER 20 SECONDS */}
           {showSurpriseButton && (
             <div className="surprise-button-container">
               <button 
