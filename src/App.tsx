@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Heart, Sparkles, Gift } from 'lucide-react';
 
 function App() {
-  const [stage, setStage] = useState<'countdown' | 'spotlight' | 'curtains' | 'reveal' | 'birthday' | 'surprise'>('countdown');
+  const [stage, setStage] = useState<'countdown' | 'spotlight' | 'curtains' | 'reveal' | 'birthday'>('countdown');
   const [countdown, setCountdown] = useState(5);
   const [showRat, setShowRat] = useState(false);
   const [showSpeechBubble, setShowSpeechBubble] = useState(false);
@@ -21,26 +21,14 @@ function App() {
   const [showFireworks, setShowFireworks] = useState(false);
   const [candlesBlown, setCandlesBlown] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  
-  // New surprise scene states
-  const [showSurpriseButton, setShowSurpriseButton] = useState(false);
-  const [isGlitching, setIsGlitching] = useState(false);
-  const [showSurpriseRat, setShowSurpriseRat] = useState(false);
-  const [showSurpriseSpeech, setShowSurpriseSpeech] = useState(false);
-  const [showEnvelope, setShowEnvelope] = useState(false);
-  const [showLetterButton, setShowLetterButton] = useState(false);
-  const [showBirthdayCard, setShowBirthdayCard] = useState(false);
-  const [cardOpened, setCardOpened] = useState(false);
 
   // Canvas refs for effects
   const confettiCanvasRef = useRef<HTMLCanvasElement>(null);
   const fireworksCanvasRef = useRef<HTMLCanvasElement>(null);
   const sparkleCanvasRef = useRef<HTMLCanvasElement>(null);
-  const surpriseSparkleCanvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>();
   const fireworksAnimationRef = useRef<number>();
   const sparkleAnimationRef = useRef<number>();
-  const surpriseSparkleAnimationRef = useRef<number>();
 
   // Audio refs
   const countdownAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -48,7 +36,6 @@ function App() {
   const curtainOpenAudioRef = useRef<HTMLAudioElement | null>(null);
   const birthdayMusicRef = useRef<HTMLAudioElement | null>(null);
   const blowCandlesAudioRef = useRef<HTMLAudioElement | null>(null);
-  const glitchAudioRef = useRef<HTMLAudioElement | null>(null);
 
   // Mouse movement for parallax effect
   useEffect(() => {
@@ -59,7 +46,7 @@ function App() {
       });
     };
 
-    if (stage === 'birthday' || stage === 'surprise') {
+    if (stage === 'birthday') {
       window.addEventListener('mousemove', handleMouseMove);
       return () => window.removeEventListener('mousemove', handleMouseMove);
     }
@@ -73,7 +60,6 @@ function App() {
     curtainOpenAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/ta-da.wav');
     birthdayMusicRef.current = new Audio('https://www.soundjay.com/misc/sounds/happy-birthday-song.wav');
     blowCandlesAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/blow-candles.wav');
-    glitchAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/glitch-sound.wav');
 
     // Set audio properties
     if (countdownAudioRef.current) {
@@ -93,13 +79,10 @@ function App() {
     if (blowCandlesAudioRef.current) {
       blowCandlesAudioRef.current.volume = 0.7;
     }
-    if (glitchAudioRef.current) {
-      glitchAudioRef.current.volume = 0.6;
-    }
 
     return () => {
       // Cleanup audio
-      [countdownAudioRef, ratEntranceAudioRef, curtainOpenAudioRef, birthdayMusicRef, blowCandlesAudioRef, glitchAudioRef].forEach(ref => {
+      [countdownAudioRef, ratEntranceAudioRef, curtainOpenAudioRef, birthdayMusicRef, blowCandlesAudioRef].forEach(ref => {
         if (ref.current) {
           ref.current.pause();
           ref.current = null;
@@ -107,77 +90,6 @@ function App() {
       });
     };
   }, []);
-
-  // Surprise Scene Sparkle Background
-  useEffect(() => {
-    if (stage === 'surprise' && surpriseSparkleCanvasRef.current) {
-      const canvas = surpriseSparkleCanvasRef.current;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-
-      const sparkles = Array.from({ length: 30 }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 2 + 1,
-        opacity: Math.random() * 0.6 + 0.2,
-        speed: Math.random() * 0.3 + 0.1,
-        angle: Math.random() * Math.PI * 2,
-        color: `hsl(${Math.random() * 60 + 200}, 70%, 80%)`, // Cool sparkle colors
-        twinkle: Math.random() * 0.02 + 0.01
-      }));
-
-      const drawSparkles = () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        sparkles.forEach(sparkle => {
-          ctx.save();
-          ctx.globalAlpha = sparkle.opacity;
-          ctx.fillStyle = sparkle.color;
-          ctx.shadowBlur = 8;
-          ctx.shadowColor = sparkle.color;
-          
-          // Draw sparkle as a star shape
-          ctx.translate(sparkle.x, sparkle.y);
-          ctx.rotate(sparkle.angle);
-          ctx.beginPath();
-          for (let i = 0; i < 4; i++) {
-            ctx.lineTo(0, sparkle.size);
-            ctx.rotate(Math.PI / 4);
-            ctx.lineTo(0, sparkle.size / 2);
-            ctx.rotate(Math.PI / 4);
-          }
-          ctx.fill();
-          ctx.restore();
-
-          // Update sparkle properties
-          sparkle.y += sparkle.speed;
-          sparkle.angle += 0.015;
-          sparkle.opacity += Math.sin(Date.now() * sparkle.twinkle) * 0.01;
-          
-          if (sparkle.opacity > 0.8) sparkle.opacity = 0.8;
-          if (sparkle.opacity < 0.1) sparkle.opacity = 0.1;
-
-          if (sparkle.y > canvas.height + 10) {
-            sparkle.y = -10;
-            sparkle.x = Math.random() * canvas.width;
-          }
-        });
-
-        surpriseSparkleAnimationRef.current = requestAnimationFrame(drawSparkles);
-      };
-
-      drawSparkles();
-
-      return () => {
-        if (surpriseSparkleAnimationRef.current) {
-          cancelAnimationFrame(surpriseSparkleAnimationRef.current);
-        }
-      };
-    }
-  }, [stage]);
 
   // Enhanced Sparkle Particles Background
   useEffect(() => {
@@ -516,16 +428,6 @@ function App() {
     }
   }, [stage, countdown]);
 
-  // Birthday stage auto-transition to surprise - UPDATED TO 20 SECONDS
-  useEffect(() => {
-    if (stage === 'birthday' && showBirthdayBanner) {
-      // Show surprise button after 20 seconds of birthday celebration
-      setTimeout(() => {
-        setShowSurpriseButton(true);
-      }, 20000); // Changed from 45000 to 20000 (20 seconds)
-    }
-  }, [stage, showBirthdayBanner]);
-
   const handleContinue = () => {
     setShowSecondSpeech(false);
     setShowRibbonButton(false);
@@ -584,8 +486,30 @@ function App() {
         setShowBalloons(true);
       }, 2500);
       
-      // REMOVED: All the setTimeout functions that hide elements
-      // Now elements stay visible permanently
+      // Hide confetti after animation
+      setTimeout(() => {
+        setShowConfetti(false);
+      }, 20000);
+      
+      // Hide fireworks after animation
+      setTimeout(() => {
+        setShowFireworks(false);
+      }, 25000);
+      
+      // Hide photo balloons after animation
+      setTimeout(() => {
+        setShowPhotoBalloons(false);
+      }, 30000);
+      
+      // Hide regular balloons after animation
+      setTimeout(() => {
+        setShowBalloons(false);
+      }, 35000);
+      
+      // Hide banner after celebration
+      setTimeout(() => {
+        setShowBirthdayBanner(false);
+      }, 40000);
     }
   };
 
@@ -601,74 +525,9 @@ function App() {
     }
   };
 
-  const handleSurpriseClick = () => {
-    setShowSurpriseButton(false);
-    setIsGlitching(true);
-    
-    // Play glitch sound
-    if (glitchAudioRef.current) {
-      glitchAudioRef.current.play().catch(() => {
-        console.log('Audio play failed');
-      });
-    }
-    
-    // Stop birthday music
-    if (birthdayMusicRef.current) {
-      birthdayMusicRef.current.pause();
-    }
-    
-    // After glitch effect (2.5 seconds)
-    setTimeout(() => {
-      setIsGlitching(false);
-      setStage('surprise');
-      
-      // Rat walks in under spotlight
-      setTimeout(() => {
-        setShowSurpriseRat(true);
-        // Play rat entrance sound
-        if (ratEntranceAudioRef.current) {
-          ratEntranceAudioRef.current.play().catch(() => {
-            console.log('Audio play failed');
-          });
-        }
-      }, 1000);
-      
-      // Speech bubble appears
-      setTimeout(() => {
-        setShowSurpriseSpeech(true);
-      }, 2500);
-      
-      // Envelope floats in
-      setTimeout(() => {
-        setShowEnvelope(true);
-      }, 5000);
-      
-      // Letter button appears
-      setTimeout(() => {
-        setShowLetterButton(true);
-      }, 6500);
-    }, 2500);
-  };
-
-  const handleLetterClick = () => {
-    setShowBirthdayCard(true);
-    // Add a small delay before opening the card for better effect
-    setTimeout(() => {
-      setCardOpened(true);
-    }, 500);
-  };
-
-  const handleCloseCard = () => {
-    setCardOpened(false);
-    // Wait for close animation before hiding the card
-    setTimeout(() => {
-      setShowBirthdayCard(false);
-    }, 800);
-  };
-
   // Enable audio on first user interaction
   const enableAudio = () => {
-    [countdownAudioRef, ratEntranceAudioRef, curtainOpenAudioRef, birthdayMusicRef, blowCandlesAudioRef, glitchAudioRef].forEach(ref => {
+    [countdownAudioRef, ratEntranceAudioRef, curtainOpenAudioRef, birthdayMusicRef, blowCandlesAudioRef].forEach(ref => {
       if (ref.current) {
         ref.current.load();
       }
@@ -677,11 +536,7 @@ function App() {
 
   return (
     <div 
-      className={`min-h-screen relative overflow-hidden ${
-        stage === 'birthday' ? 'birthday-magical-background' : 
-        stage === 'surprise' ? 'surprise-background' : 
-        'bg-black'
-      } ${isGlitching ? 'glitch-effect' : ''}`} 
+      className={`min-h-screen relative overflow-hidden ${stage === 'birthday' ? 'birthday-magical-background' : 'bg-black'}`} 
       onClick={enableAudio}
       style={stage === 'birthday' ? {
         background: `linear-gradient(135deg at ${mousePosition.x}% ${mousePosition.y}%, 
@@ -697,191 +552,9 @@ function App() {
         <div className="film-grain"></div>
       </div>
 
-      {/* Glitch Overlay */}
-      {isGlitching && (
-        <div className="glitch-overlay">
-          <div className="glitch-layer glitch-layer-1"></div>
-          <div className="glitch-layer glitch-layer-2"></div>
-          <div className="glitch-layer glitch-layer-3"></div>
-        </div>
-      )}
-
-      {/* Birthday Card Modal */}
-      {showBirthdayCard && (
-        <div className="birthday-card-overlay">
-          <div className="birthday-card-backdrop" onClick={handleCloseCard}></div>
-          <div className={`birthday-card-container ${cardOpened ? 'card-opened' : ''}`}>
-            {/* Card Cover (Front) */}
-            <div className="birthday-card-cover">
-              <div className="card-cover-content">
-                <div className="card-cover-decoration">
-                  <div className="cover-sparkles">
-                    {[...Array(8)].map((_, i) => (
-                      <div key={i} className={`cover-sparkle cover-sparkle-${i}`}>✨</div>
-                    ))}
-                  </div>
-                  <div className="cover-title">Happy Birthday</div>
-                  <div className="cover-subtitle">Chuiyaa</div>
-                  <div className="cover-heart">💖</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Card Interior */}
-            <div className="birthday-card-interior">
-              {/* Left Side - Photos */}
-              <div className="card-left-side">
-                <div className="card-photos-section">
-                  <div className="photos-title">Special Memories</div>
-                  
-                  {/* Photo 1 */}
-                  <div className="card-photo-frame">
-                    <div className="photo-placeholder">
-                      <div className="photo-icon">📸</div>
-                      <div className="photo-text">Your Photo Here</div>
-                    </div>
-                    <div className="photo-border"></div>
-                  </div>
-
-                  {/* Photo 2 */}
-                  <div className="card-photo-frame">
-                    <div className="photo-placeholder">
-                      <div className="photo-icon">📸</div>
-                      <div className="photo-text">Your Photo Here</div>
-                    </div>
-                    <div className="photo-border"></div>
-                  </div>
-
-                  {/* Birthday Caption */}
-                  <div className="birthday-caption">
-                    <div className="caption-text">Happy Birthday Chuiya!</div>
-                    <div className="caption-hearts">💕 💕 💕</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Side - Message */}
-              <div className="card-right-side">
-                <div className="card-message-section">
-                  <div className="message-title">Special Message</div>
-                  <div className="message-content">
-                    <div className="message-placeholder">
-                      <p>Your heartfelt message will go here...</p>
-                      <p>This is where you can write:</p>
-                      <ul>
-                        <li>• Personal wishes</li>
-                        <li>• Favorite memories</li>
-                        <li>• Special thoughts</li>
-                        <li>• Birthday blessings</li>
-                      </ul>
-                      <div className="message-signature">
-                        <p>With love,</p>
-                        <p>Your Name ✨</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Close Button */}
-            <button className="card-close-button" onClick={handleCloseCard}>
-              <span>Close Card ✨</span>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Surprise Scene */}
-      {stage === 'surprise' && (
-        <>
-          {/* Surprise Sparkle Canvas */}
-          <canvas
-            ref={surpriseSparkleCanvasRef}
-            className="fixed top-0 left-0 w-full h-full pointer-events-none z-10"
-          />
-
-          {/* Spotlight effect for surprise scene */}
-          <div className="spotlight-container">
-            <div className="spotlight surprise-spotlight"></div>
-            <div className="spotlight-particles">
-              {[...Array(12)].map((_, i) => (
-                <div key={i} className={`particle particle-${i}`}></div>
-              ))}
-            </div>
-          </div>
-
-          {/* Surprise Rat Character */}
-          {showSurpriseRat && (
-            <div className="surprise-rat-container">
-              <img 
-                src="/chuiya-rat.png" 
-                alt="Cute Chuiya rat character" 
-                className="surprise-rat-image"
-              />
-              
-              {/* Magic sparkles around rat */}
-              <div className="magic-sparkles celebration">
-                {[...Array(8)].map((_, i) => (
-                  <div key={i} className={`sparkle sparkle-celebration-${i}`}>✨</div>
-                ))}
-              </div>
-
-              {/* Surprise Speech bubble */}
-              {showSurpriseSpeech && (
-                <div className="surprise-speech-bubble">
-                  <div className="speech-content">
-                    <Sparkles className="speech-icon" />
-                    <p>Oyee Chuiyaa...</p>
-                    <p>Abhi asli surprise baaki hai!</p>
-                  </div>
-                  <div className="surprise-speech-tail"></div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Animated Envelope */}
-          {showEnvelope && (
-            <div className="floating-envelope">
-              <div className="envelope">
-                <div className="envelope-body">💌</div>
-                <div className="envelope-sparkles">
-                  {[...Array(6)].map((_, i) => (
-                    <div key={i} className={`envelope-sparkle envelope-sparkle-${i}`}>✨</div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Simple Letter Button - REMOVED HEART */}
-          {showLetterButton && (
-            <div className="letter-button-container">
-              <button 
-                onClick={handleLetterClick}
-                className="letter-button"
-              >
-                <span>Open Letter</span>
-              </button>
-            </div>
-          )}
-        </>
-      )}
-
       {/* Birthday Stage - Enhanced Magical Interface */}
       {stage === 'birthday' && (
         <>
-          {/* Birthday Background Balloons */}
-          <div className="birthday-background-balloons">
-            {[...Array(15)].map((_, i) => (
-              <div key={i} className={`bg-balloon bg-balloon-${i}`}>
-                <div className="bg-balloon-body"></div>
-                <div className="bg-balloon-string"></div>
-              </div>
-            ))}
-          </div>
-
           {/* Sparkle Particles Canvas */}
           <canvas
             ref={sparkleCanvasRef}
@@ -918,7 +591,7 @@ function App() {
             />
           )}
 
-          {/* Enhanced Letter Box Banner with Rat Mascot - STAYS VISIBLE */}
+          {/* Enhanced Letter Box Banner with Rat Mascot */}
           {showBirthdayBanner && (
             <div className="enhanced-birthday-banner">
               <div className="banner-row">
@@ -954,7 +627,7 @@ function App() {
             </div>
           )}
 
-          {/* Interactive 3D Birthday Cake - BIGGER AND BETTER */}
+          {/* Interactive 3D Birthday Cake */}
           <div className="interactive-cake-container">
             <div 
               className={`interactive-birthday-cake ${candlesBlown ? 'candles-blown' : ''}`}
@@ -976,9 +649,10 @@ function App() {
                 </div>
               )}
             </div>
+            {/* Removed the click hint text */}
           </div>
 
-          {/* Three Special Photo Balloons with Different Captions - STAYS VISIBLE */}
+          {/* Three Special Photo Balloons with Different Captions */}
           {showPhotoBalloons && (
             <>
               {/* First Photo Balloon */}
@@ -1034,7 +708,7 @@ function App() {
             </>
           )}
 
-          {/* Enhanced Floating Balloons with Random Movement - STAYS VISIBLE */}
+          {/* Enhanced Floating Balloons with Random Movement */}
           {showBalloons && (
             <div className="enhanced-balloons-container">
               {[...Array(20)].map((_, i) => (
@@ -1048,22 +722,10 @@ function App() {
               ))}
             </div>
           )}
-
-          {/* Surprise Button - NOW APPEARS AFTER 20 SECONDS */}
-          {showSurpriseButton && (
-            <div className="surprise-button-container">
-              <button 
-                onClick={handleSurpriseClick}
-                className="surprise-button"
-              >
-                <span>Click for More 🎁</span>
-              </button>
-            </div>
-          )}
         </>
       )}
 
-      {/* ENHANCED COUNTDOWN STAGE - FROM PREVIOUS DRAFT */}
+      {/* Countdown Stage */}
       {stage === 'countdown' && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="relative">
@@ -1075,7 +737,7 @@ function App() {
             </div>
             {/* Countdown text */}
             <div className="countdown-text">
-              Abb Maja Aayega !!!
+              Abb Ayega Maja !!!
             </div>
             {/* Musical notes animation during countdown */}
             <div className="musical-notes">
@@ -1142,7 +804,7 @@ function App() {
         </>
       )}
 
-      {/* ENHANCED CURTAINS STAGE - FROM PREVIOUS DRAFT */}
+      {/* Curtains Stage - Lights on with curtains */}
       {(stage === 'curtains' || stage === 'reveal') && (
         <>
           {/* Stage background - Night sky for reveal, lights on for curtains */}
@@ -1178,7 +840,7 @@ function App() {
               </div>
             )}
 
-            {/* Enhanced Curtains with Better Animation */}
+            {/* Curtains */}
             {showCurtains && (
               <>
                 <div className={`curtain-left ${curtainOpen ? 'curtain-open-left' : ''}`}></div>
@@ -1204,7 +866,7 @@ function App() {
               </div>
             )}
 
-            {/* Second Speech bubble - ENHANCED FROM PREVIOUS DRAFT */}
+            {/* Second Speech bubble - only in curtains stage */}
             {stage === 'curtains' && showSecondSpeech && (
               <div className="speech-bubble">
                 <div className="speech-content">
@@ -1229,7 +891,7 @@ function App() {
             )}
           </div>
 
-          {/* Enhanced Ribbon Button - FROM PREVIOUS DRAFT */}
+          {/* Ribbon Button - only in curtains stage */}
           {stage === 'curtains' && showRibbonButton && (
             <div className="ribbon-button-container">
               <button 
@@ -1241,7 +903,7 @@ function App() {
             </div>
           )}
 
-          {/* Enhanced Gift Box - FROM PREVIOUS DRAFT */}
+          {/* Gift Box - only in reveal stage */}
           {stage === 'reveal' && showGiftBox && (
             <div className="gift-box-container">
               <div 
@@ -1266,9 +928,9 @@ function App() {
                 </div>
               </div>
               
-              {/* Click hint - POSITIONED BELOW GIFT BOX */}
+              {/* Click hint */}
               {showClickHint && !giftOpened && (
-                <div className="click-hint-below">
+                <div className="click-hint">
                   <p>Click on the gift box! 🎁</p>
                 </div>
               )}
