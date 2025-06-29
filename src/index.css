@@ -27,6 +27,235 @@
   }
 }
 
+/* TV Glitch Effect */
+.tv-glitch-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  z-index: 1000;
+  animation: glitchFlicker 2s ease-in-out;
+}
+
+.glitch-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.03) 2px,
+    rgba(255, 255, 255, 0.03) 4px
+  );
+  animation: glitchScan 0.1s linear infinite;
+}
+
+.glitch-static {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 3px 3px, 7px 7px;
+  animation: staticNoise 0.05s steps(8, end) infinite;
+}
+
+.glitch-bars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 0, 0, 0.1) 25%,
+    rgba(0, 255, 0, 0.1) 50%,
+    rgba(0, 0, 255, 0.1) 75%,
+    transparent 100%
+  );
+  animation: glitchBars 0.2s ease-in-out infinite;
+}
+
+@keyframes glitchFlicker {
+  0%, 100% { opacity: 1; }
+  10% { opacity: 0.8; }
+  20% { opacity: 1; }
+  30% { opacity: 0.9; }
+  40% { opacity: 1; }
+  50% { opacity: 0.7; }
+  60% { opacity: 1; }
+  70% { opacity: 0.85; }
+  80% { opacity: 1; }
+  90% { opacity: 0.9; }
+}
+
+@keyframes glitchScan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes staticNoise {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  10% { transform: translate(-2%, -3%) rotate(1deg); }
+  20% { transform: translate(-1%, 2%) rotate(-1deg); }
+  30% { transform: translate(3%, -1%) rotate(0deg); }
+  40% { transform: translate(-2%, 1%) rotate(1deg); }
+  50% { transform: translate(1%, -2%) rotate(-1deg); }
+  60% { transform: translate(2%, 1%) rotate(0deg); }
+  70% { transform: translate(-1%, -1%) rotate(1deg); }
+  80% { transform: translate(1%, 2%) rotate(-1deg); }
+  90% { transform: translate(-2%, -1%) rotate(0deg); }
+}
+
+@keyframes glitchBars {
+  0%, 100% { transform: translateX(0); opacity: 0.3; }
+  25% { transform: translateX(-5px); opacity: 0.7; }
+  50% { transform: translateX(5px); opacity: 0.5; }
+  75% { transform: translateX(-3px); opacity: 0.8; }
+}
+
+/* Surprise Button */
+.surprise-button-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 200;
+  animation: surpriseButtonAppear 2s ease-out;
+}
+
+.surprise-button {
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dda0dd);
+  background-size: 300% 300%;
+  animation: gradientShift 3s ease infinite, surpriseButtonPulse 2s ease-in-out infinite;
+  border: none;
+  padding: 20px 40px;
+  border-radius: 50px;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 
+    0 10px 40px rgba(0,0,0,0.4),
+    0 0 20px rgba(255,255,255,0.2);
+  transition: all 0.3s ease;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  position: relative;
+  border: 3px solid rgba(255,255,255,0.3);
+}
+
+.surprise-button:hover {
+  transform: translateY(-8px) scale(1.1);
+  box-shadow: 
+    0 15px 50px rgba(0,0,0,0.5),
+    0 0 30px rgba(255,255,255,0.4);
+}
+
+.surprise-button:active {
+  transform: translateY(-4px) scale(1.05);
+}
+
+@keyframes surpriseButtonAppear {
+  0% { 
+    opacity: 0; 
+    transform: translate(-50%, -50%) scale(0.5) rotate(180deg); 
+  }
+  50% { 
+    transform: translate(-50%, -50%) scale(1.2) rotate(0deg); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translate(-50%, -50%) scale(1) rotate(0deg); 
+  }
+}
+
+@keyframes surpriseButtonPulse {
+  0%, 100% { 
+    box-shadow: 
+      0 10px 40px rgba(0,0,0,0.4),
+      0 0 20px rgba(255,255,255,0.2);
+  }
+  50% { 
+    box-shadow: 
+      0 15px 50px rgba(0,0,0,0.5),
+      0 0 40px rgba(255,255,255,0.5);
+  }
+}
+
+/* Surprise Stage Styles */
+.surprise-spotlight {
+  border-top-color: rgba(255, 248, 220, 0.25) !important;
+  animation: surpriseSpotlightGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes surpriseSpotlightGlow {
+  0% { 
+    filter: blur(2px) brightness(1.2);
+    border-top-color: rgba(255, 248, 220, 0.25);
+  }
+  100% { 
+    filter: blur(1px) brightness(1.5);
+    border-top-color: rgba(255, 248, 220, 0.35);
+  }
+}
+
+.surprise-rat-position {
+  bottom: 30% !important;
+  left: 50% !important;
+  transform: translateX(-50%) scale(1.1) !important;
+  animation: surpriseRatEntrance 2s ease-out;
+}
+
+@keyframes surpriseRatEntrance {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.5) rotate(-10deg);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.3) rotate(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.1) rotate(0deg);
+  }
+}
+
+.surprise-speech {
+  background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%) !important;
+  color: white !important;
+  border: 3px solid #ffd700 !important;
+  animation: surpriseSpeechGlow 1.5s ease-in-out infinite alternate;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 20px rgba(255,215,0,0.6) !important;
+}
+
+.surprise-speech .speech-content p {
+  color: white !important;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.surprise-speech .speech-tail {
+  border-top-color: #ff6b6b !important;
+}
+
+@keyframes surpriseSpeechGlow {
+  0% { 
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 20px rgba(255,215,0,0.6);
+  }
+  100% { 
+    box-shadow: 0 15px 50px rgba(0,0,0,0.5), 0 0 40px rgba(255,215,0,0.9);
+  }
+}
+
 /* Enhanced Bokeh Background Effects */
 .bokeh-container {
   position: fixed;
@@ -1558,6 +1787,11 @@
     font-size: 16px;
   }
   
+  .surprise-button {
+    padding: 16px 32px;
+    font-size: 18px;
+  }
+  
   .gift-box {
     width: 150px;
     height: 150px;
@@ -1632,6 +1866,11 @@
   
   .speech-content p {
     font-size: 11px;
+  }
+  
+  .surprise-button {
+    padding: 14px 28px;
+    font-size: 16px;
   }
   
   .gift-box {
