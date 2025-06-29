@@ -516,13 +516,13 @@ function App() {
     }
   }, [stage, countdown]);
 
-  // Birthday stage auto-transition to surprise - UPDATED TO 20 SECONDS
+  // Birthday stage auto-transition to surprise - UPDATED TO 10 SECONDS
   useEffect(() => {
     if (stage === 'birthday' && showBirthdayBanner) {
-      // Show surprise button after 20 seconds of birthday celebration
+      // Show surprise button after 10 seconds of birthday celebration
       setTimeout(() => {
         setShowSurpriseButton(true);
-      }, 20000); // Changed from 45000 to 20000 (20 seconds)
+      }, 10000); // Changed to 10 seconds
     }
   }, [stage, showBirthdayBanner]);
 
@@ -616,7 +616,7 @@ function App() {
       birthdayMusicRef.current.pause();
     }
     
-    // After glitch effect (2.5 seconds)
+    // After glitch effect (2 seconds)
     setTimeout(() => {
       setIsGlitching(false);
       setStage('surprise');
@@ -646,7 +646,7 @@ function App() {
       setTimeout(() => {
         setShowLetterButton(true);
       }, 6500);
-    }, 2500);
+    }, 2000); // Changed to 2 seconds
   };
 
   const handleLetterClick = () => {
@@ -832,7 +832,7 @@ function App() {
                   <div className="speech-content">
                     <Sparkles className="speech-icon" />
                     <p>Oyee Chuiyaa...</p>
-                    <p>Abhi asli surprise baaki hai!</p>
+                    <p>Abhi surprise abhi baaki hai!</p>
                   </div>
                   <div className="surprise-speech-tail"></div>
                 </div>
@@ -1034,7 +1034,7 @@ function App() {
             </div>
           )}
 
-          {/* Surprise Button - NOW APPEARS AFTER 20 SECONDS */}
+          {/* Surprise Button - NOW APPEARS AFTER 10 SECONDS */}
           {showSurpriseButton && (
             <div className="surprise-button-container">
               <button 
