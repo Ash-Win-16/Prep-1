@@ -677,7 +677,7 @@ function App() {
   return (
     <div 
       className={`min-h-screen relative overflow-hidden ${
-        stage === 'birthday' ? 'birthday-background' : 
+        stage === 'birthday' ? 'birthday-magical-background' : 
         stage === 'surprise' ? 'surprise-background' : 
         'bg-black'
       } ${isGlitching ? 'glitch-effect' : ''}`} 
@@ -832,7 +832,7 @@ function App() {
                   <div className="speech-content">
                     <Sparkles className="speech-icon" />
                     <p>Oyee Chuiyaa...</p>
-                    <p>Abhi surprise abhi baaki hai!</p>
+                    <p>Abhi surprise abhi baaki hai Gawar!</p>
                   </div>
                   <div className="surprise-speech-tail"></div>
                 </div>
@@ -871,13 +871,17 @@ function App() {
       {/* Birthday Stage - Enhanced Magical Interface */}
       {stage === 'birthday' && (
         <>
-          {/* Birthday Background Balloons */}
-          <div className="birthday-background-balloons">
-            {[...Array(15)].map((_, i) => (
-              <div key={i} className={`bg-balloon bg-balloon-${i}`}>
-                <div className="bg-balloon-body"></div>
-                <div className="bg-balloon-string"></div>
-              </div>
+          {/* Bokeh Background Effects */}
+          <div className="bokeh-container">
+            {[...Array(25)].map((_, i) => (
+              <div key={i} className={`bokeh bokeh-${i}`}></div>
+            ))}
+          </div>
+
+          {/* Floating Sparkles */}
+          <div className="floating-sparkles">
+            {[...Array(20)].map((_, i) => (
+              <div key={i} className={`floating-sparkle sparkle-${i}`}>✨</div>
             ))}
           </div>
 
@@ -1041,7 +1045,7 @@ function App() {
                 onClick={handleSurpriseClick}
                 className="surprise-button"
               >
-                <span>Click for More 🎁</span>
+                <span>Click Here 🎁</span>
               </button>
             </div>
           )}
