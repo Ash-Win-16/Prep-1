@@ -189,7 +189,7 @@ function App() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
-      const sparkles = Array.from({ length, 50 }, () => ({
+      const sparkles = Array.from({ length: 50 }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         size: Math.random() * 3 + 1,
