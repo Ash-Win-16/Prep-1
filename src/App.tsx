@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Heart, Sparkles, Gift } from 'lucide-react';
 
 function App() {
-  const [stage, setStage] = useState<'countdown' | 'spotlight' | 'curtains' | 'reveal' | 'birthday' | 'surprise'>('countdown');
+  const [stage, setStage] = useState<'countdown' | 'spotlight' | 'curtains' | 'reveal' | 'birthday' | 'surprise' | 'card'>('countdown');
   const [countdown, setCountdown] = useState(5);
   const [showRat, setShowRat] = useState(false);
   const [showSpeechBubble, setShowSpeechBubble] = useState(false);
@@ -24,6 +24,7 @@ function App() {
   const [showSurpriseButton, setShowSurpriseButton] = useState(false);
   const [showTVGlitch, setShowTVGlitch] = useState(false);
   const [showSurpriseSpotlight, setShowSurpriseSpotlight] = useState(false);
+  const [showCardButton, setShowCardButton] = useState(false);
 
   // Canvas refs for effects
   const confettiCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -50,7 +51,7 @@ function App() {
       });
     };
 
-    if (stage === 'birthday' || stage === 'surprise') {
+    if (stage === 'birthday' || stage === 'surprise' || stage === 'card') {
       window.addEventListener('mousemove', handleMouseMove);
       return () => window.removeEventListener('mousemove', handleMouseMove);
     }
@@ -110,9 +111,20 @@ function App() {
     }
   }, [stage]);
 
+  // Show card button after surprise spotlight appears
+  useEffect(() => {
+    if (stage === 'surprise' && showSurpriseSpotlight) {
+      const timer = setTimeout(() => {
+        setShowCardButton(true);
+      }, 3000); // 3 seconds after surprise spotlight
+
+      return () => clearTimeout(timer);
+    }
+  }, [stage, showSurpriseSpotlight]);
+
   // Enhanced Sparkle Particles Background
   useEffect(() => {
-    if ((stage === 'birthday' || stage === 'surprise') && sparkleCanvasRef.current) {
+    if ((stage === 'birthday' || stage === 'surprise' || stage === 'card') && sparkleCanvasRef.current) {
       const canvas = sparkleCanvasRef.current;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
@@ -183,7 +195,7 @@ function App() {
 
   // Enhanced Confetti animation
   useEffect(() => {
-    if ((stage === 'birthday' || stage === 'surprise') && showConfetti && confettiCanvasRef.current) {
+    if ((stage === 'birthday' || stage === 'surprise' || stage === 'card') && showConfetti && confettiCanvasRef.current) {
       const canvas = confettiCanvasRef.current;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
@@ -252,7 +264,7 @@ function App() {
 
   // Enhanced Fireworks animation with sparkle bursts
   useEffect(() => {
-    if ((stage === 'birthday' || stage === 'surprise') && showFireworks && fireworksCanvasRef.current) {
+    if ((stage === 'birthday' || stage === 'surprise' || stage === 'card') && showFireworks && fireworksCanvasRef.current) {
       const canvas = fireworksCanvasRef.current;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
@@ -495,15 +507,13 @@ function App() {
       setShowConfetti(true);
       setShowFireworks(true);
       
-      // Show photo balloons earlier (after 1 second instead of 1.5)
-      setTimeout(() => {
-        setShowPhotoBalloons(true);
-      }, 1000);
+      // Show photo balloons much earlier (immediately)
+      setShowPhotoBalloons(true);
       
       // Show regular balloons after photo balloons (reduced timing)
       setTimeout(() => {
         setShowBalloons(true);
-      }, 2000);
+      }, 1500);
       
       // Hide confetti after animation
       setTimeout(() => {
@@ -515,20 +525,20 @@ function App() {
         setShowFireworks(false);
       }, 25000);
       
-      // Hide photo balloons after animation
+      // Hide photo balloons after animation (extended time)
       setTimeout(() => {
         setShowPhotoBalloons(false);
-      }, 30000);
+      }, 35000);
       
       // Hide regular balloons after animation
       setTimeout(() => {
         setShowBalloons(false);
-      }, 35000);
+      }, 40000);
       
       // Hide banner after celebration
       setTimeout(() => {
         setShowBirthdayBanner(false);
-      }, 40000);
+      }, 45000);
     }
   };
 
@@ -550,6 +560,11 @@ function App() {
       setShowSurpriseSpotlight(true);
       setShowRat(true);
     }, 2000);
+  };
+
+  const handleCardClick = () => {
+    setShowCardButton(false);
+    setStage('card');
   };
 
   const handleCakeClick = () => {
@@ -576,11 +591,11 @@ function App() {
   return (
     <div 
       className={`min-h-screen relative overflow-hidden ${
-        stage === 'birthday' || stage === 'surprise' ? 'birthday-magical-background' : 
+        stage === 'birthday' || stage === 'surprise' || stage === 'card' ? 'birthday-magical-background' : 
         stage === 'surprise' ? 'bg-black' : 'bg-black'
       }`} 
       onClick={enableAudio}
-      style={(stage === 'birthday' || stage === 'surprise') ? {
+      style={(stage === 'birthday' || stage === 'surprise' || stage === 'card') ? {
         background: `linear-gradient(135deg at ${mousePosition.x}% ${mousePosition.y}%, 
           #ffecd2 0%, 
           #fcb69f 25%, 
@@ -600,6 +615,60 @@ function App() {
           <div className="glitch-lines"></div>
           <div className="glitch-static"></div>
           <div className="glitch-bars"></div>
+        </div>
+      )}
+
+      {/* Birthday Card Stage */}
+      {stage === 'card' && (
+        <div className="birthday-card-container">
+          {/* Sparkle Particles Canvas */}
+          <canvas
+            ref={sparkleCanvasRef}
+            className="fixed top-0 left-0 w-full h-full pointer-events-none z-10"
+          />
+
+          {/* Birthday Card */}
+          <div className="birthday-card">
+            <div className="card-front">
+              <div className="card-header">
+                <h1 className="card-title">Happy Birthday!</h1>
+                <div className="card-subtitle">Chuiyaa</div>
+              </div>
+              
+              <div className="card-content">
+                <div className="card-message">
+                  <p>🎉 Another year of being absolutely amazing! 🎉</p>
+                  <p>May your day be filled with happiness and your year with joy!</p>
+                  <p>Keep being the wonderful person you are! ✨</p>
+                </div>
+                
+                <div className="card-decorations">
+                  <div className="card-balloons">
+                    <span>🎈</span>
+                    <span>🎈</span>
+                    <span>🎈</span>
+                  </div>
+                  <div className="card-cake">🎂</div>
+                  <div className="card-gifts">
+                    <span>🎁</span>
+                    <span>🎁</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="card-footer">
+                <p>With lots of love and best wishes! 💝</p>
+                <div className="card-signature">- Your Friend</div>
+              </div>
+            </div>
+            
+            {/* Card sparkles */}
+            <div className="card-sparkles">
+              {[...Array(12)].map((_, i) => (
+                <div key={i} className={`card-sparkle card-sparkle-${i}`}>✨</div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
@@ -644,6 +713,18 @@ function App() {
                     <div className="speech-tail"></div>
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Card Button */}
+            {showCardButton && (
+              <div className="card-button-container">
+                <button 
+                  onClick={handleCardClick}
+                  className="card-button"
+                >
+                  <span>🎂 Open the Card 🎂</span>
+                </button>
               </div>
             )}
           </div>
@@ -761,11 +842,11 @@ function App() {
             </div>
           )}
 
-          {/* Three Special Photo Balloons with Different Captions */}
+          {/* Three Special Photo Balloons with Different Captions - Faster Animation */}
           {showPhotoBalloons && (
             <>
               {/* First Photo Balloon */}
-              <div className="special-photo-balloon balloon-1">
+              <div className="special-photo-balloon balloon-1 fast-balloons">
                 <div className="photo-balloon-container">
                   <div className="photo-circle">
                     <div className="placeholder-photo">📸</div>
@@ -782,7 +863,7 @@ function App() {
               </div>
 
               {/* Second Photo Balloon */}
-              <div className="special-photo-balloon balloon-2">
+              <div className="special-photo-balloon balloon-2 fast-balloons">
                 <div className="photo-balloon-container">
                   <div className="photo-circle">
                     <div className="placeholder-photo">📸</div>
@@ -799,7 +880,7 @@ function App() {
               </div>
 
               {/* Third Photo Balloon */}
-              <div className="special-photo-balloon balloon-3">
+              <div className="special-photo-balloon balloon-3 fast-balloons">
                 <div className="photo-balloon-container">
                   <div className="photo-circle">
                     <div className="placeholder-photo">📸</div>

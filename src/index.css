@@ -27,6 +27,289 @@
   }
 }
 
+/* Birthday Card Stage */
+.birthday-card-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 25%, #ff9a9e 50%, #fecfef 75%, #fecfef 100%);
+}
+
+.birthday-card {
+  position: relative;
+  width: 600px;
+  height: 400px;
+  perspective: 1000px;
+  animation: cardFloatIn 2s ease-out;
+}
+
+.card-front {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #fff 0%, #f8f9ff 100%);
+  border-radius: 20px;
+  box-shadow: 
+    0 20px 60px rgba(0,0,0,0.3),
+    inset 0 2px 0 rgba(255,255,255,0.8),
+    inset 0 -2px 0 rgba(0,0,0,0.1);
+  border: 3px solid #ffd700;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-front::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+  animation: cardShimmer 3s ease-in-out infinite;
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-size: 3rem;
+  font-weight: bold;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease infinite;
+  margin: 0;
+  text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card-subtitle {
+  font-size: 1.8rem;
+  color: #ff6b6b;
+  font-weight: bold;
+  margin-top: 10px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.card-message {
+  text-align: center;
+  line-height: 1.8;
+}
+
+.card-message p {
+  font-size: 1.1rem;
+  color: #333;
+  margin: 10px 0;
+  font-weight: 500;
+}
+
+.card-decorations {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  font-size: 2rem;
+  animation: cardDecorationsFloat 4s ease-in-out infinite;
+}
+
+.card-balloons span {
+  display: inline-block;
+  animation: balloonBob 3s ease-in-out infinite;
+}
+
+.card-balloons span:nth-child(1) { animation-delay: 0s; }
+.card-balloons span:nth-child(2) { animation-delay: 0.5s; }
+.card-balloons span:nth-child(3) { animation-delay: 1s; }
+
+.card-cake {
+  animation: cakeBounce 2s ease-in-out infinite;
+}
+
+.card-gifts span {
+  display: inline-block;
+  animation: giftWiggle 2.5s ease-in-out infinite;
+}
+
+.card-gifts span:nth-child(1) { animation-delay: 0s; }
+.card-gifts span:nth-child(2) { animation-delay: 0.8s; }
+
+.card-footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.card-footer p {
+  font-size: 1rem;
+  color: #666;
+  margin: 0 0 10px 0;
+  font-style: italic;
+}
+
+.card-signature {
+  font-size: 1.1rem;
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+.card-sparkles {
+  position: absolute;
+  inset: -40px;
+  pointer-events: none;
+}
+
+.card-sparkle {
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0;
+  animation: cardSparkleFloat 3s ease-in-out infinite;
+}
+
+.card-sparkle-0 { top: 10%; left: 10%; animation-delay: 0s; }
+.card-sparkle-1 { top: 20%; right: 10%; animation-delay: 0.3s; }
+.card-sparkle-2 { bottom: 30%; left: 5%; animation-delay: 0.6s; }
+.card-sparkle-3 { bottom: 20%; right: 15%; animation-delay: 0.9s; }
+.card-sparkle-4 { top: 50%; left: -5%; animation-delay: 1.2s; }
+.card-sparkle-5 { top: 60%; right: -5%; animation-delay: 1.5s; }
+.card-sparkle-6 { bottom: 50%; left: 10%; animation-delay: 1.8s; }
+.card-sparkle-7 { top: 30%; right: 5%; animation-delay: 2.1s; }
+.card-sparkle-8 { bottom: 40%; right: 20%; animation-delay: 2.4s; }
+.card-sparkle-9 { top: 70%; left: 15%; animation-delay: 2.7s; }
+.card-sparkle-10 { bottom: 10%; left: 20%; animation-delay: 3s; }
+.card-sparkle-11 { top: 40%; right: 25%; animation-delay: 0.5s; }
+
+@keyframes cardFloatIn {
+  0% { 
+    opacity: 0; 
+    transform: translateY(-100px) scale(0.8) rotateY(180deg); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0) scale(1) rotateY(0deg); 
+  }
+}
+
+@keyframes cardShimmer {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+@keyframes cardDecorationsFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes balloonBob {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+}
+
+@keyframes giftWiggle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-5deg) scale(1.05); }
+  75% { transform: rotate(5deg) scale(1.05); }
+}
+
+@keyframes cardSparkleFloat {
+  0%, 100% { 
+    opacity: 0; 
+    transform: translateY(0px) scale(0.8) rotate(0deg); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: translateY(-20px) scale(1.3) rotate(180deg); 
+  }
+}
+
+/* Card Button */
+.card-button-container {
+  position: fixed;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  animation: cardButtonAppear 2s ease-out;
+}
+
+.card-button {
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dda0dd);
+  background-size: 300% 300%;
+  animation: gradientShift 3s ease infinite, cardButtonPulse 2s ease-in-out infinite;
+  border: none;
+  padding: 20px 40px;
+  border-radius: 50px;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 
+    0 10px 40px rgba(0,0,0,0.4),
+    0 0 20px rgba(255,255,255,0.2);
+  transition: all 0.3s ease;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  position: relative;
+  border: 3px solid rgba(255,255,255,0.3);
+}
+
+.card-button:hover {
+  transform: translateY(-8px) scale(1.1);
+  box-shadow: 
+    0 15px 50px rgba(0,0,0,0.5),
+    0 0 30px rgba(255,255,255,0.4);
+}
+
+.card-button:active {
+  transform: translateY(-4px) scale(1.05);
+}
+
+@keyframes cardButtonAppear {
+  0% { 
+    opacity: 0; 
+    transform: translateX(-50%) scale(0.5) rotate(180deg); 
+  }
+  50% { 
+    transform: translateX(-50%) scale(1.2) rotate(0deg); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateX(-50%) scale(1) rotate(0deg); 
+  }
+}
+
+@keyframes cardButtonPulse {
+  0%, 100% { 
+    box-shadow: 
+      0 10px 40px rgba(0,0,0,0.4),
+      0 0 20px rgba(255,255,255,0.2);
+  }
+  50% { 
+    box-shadow: 
+      0 15px 50px rgba(0,0,0,0.5),
+      0 0 40px rgba(255,255,255,0.5);
+  }
+}
+
 /* TV Glitch Effect */
 .tv-glitch-overlay {
   position: fixed;
@@ -627,6 +910,44 @@
   100% { 
     opacity: 0; 
     transform: translateY(-40px) scale(0.8); 
+  }
+}
+
+/* Fast Photo Balloons - Faster Animation */
+.fast-balloons {
+  animation: fastPhotoBalloonsGentle 15s ease-in-out infinite !important;
+}
+
+.fast-balloons.balloon-1 {
+  animation-delay: 0s !important;
+}
+
+.fast-balloons.balloon-2 {
+  animation-delay: 5s !important;
+}
+
+.fast-balloons.balloon-3 {
+  animation-delay: 10s !important;
+}
+
+@keyframes fastPhotoBalloonsGentle {
+  0% { 
+    bottom: -200px; 
+    opacity: 0;
+    transform: translateX(0) rotate(0deg);
+  }
+  10% { 
+    opacity: 1;
+    bottom: 20vh;
+  }
+  90% { 
+    opacity: 1;
+    bottom: 80vh;
+  }
+  100% { 
+    bottom: 100vh; 
+    opacity: 0;
+    transform: translateX(30px) rotate(10deg);
   }
 }
 
@@ -1791,6 +2112,11 @@
     padding: 16px 32px;
     font-size: 18px;
   }
+
+  .card-button {
+    padding: 16px 32px;
+    font-size: 18px;
+  }
   
   .gift-box {
     width: 150px;
@@ -1831,6 +2157,27 @@
     width: 30px;
     height: 30px;
   }
+
+  .birthday-card {
+    width: 500px;
+    height: 350px;
+  }
+
+  .card-front {
+    padding: 30px;
+  }
+
+  .card-title {
+    font-size: 2.5rem;
+  }
+
+  .card-subtitle {
+    font-size: 1.5rem;
+  }
+
+  .card-message p {
+    font-size: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1869,6 +2216,11 @@
   }
   
   .surprise-button {
+    padding: 14px 28px;
+    font-size: 16px;
+  }
+
+  .card-button {
     padding: 14px 28px;
     font-size: 16px;
   }
@@ -1928,5 +2280,31 @@
   .mascot-image {
     width: 25px;
     height: 25px;
+  }
+
+  .birthday-card {
+    width: 400px;
+    height: 300px;
+  }
+
+  .card-front {
+    padding: 20px;
+  }
+
+  .card-title {
+    font-size: 2rem;
+  }
+
+  .card-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .card-message p {
+    font-size: 0.9rem;
+  }
+
+  .card-decorations {
+    font-size: 1.5rem;
+    gap: 20px;
   }
 }
