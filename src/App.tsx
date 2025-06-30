@@ -63,6 +63,7 @@ function App() {
     countdownAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/clock-ticking-3.wav');
     ratEntranceAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/magic-chime-02.wav');
     curtainOpenAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/ta-da.wav');
+    // Use a happy birthday song URL
     birthdayMusicRef.current = new Audio('https://www.soundjay.com/misc/sounds/happy-birthday-song.wav');
     blowCandlesAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/blow-candles.wav');
     glitchAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/static-noise.wav');
@@ -842,14 +843,18 @@ function App() {
             </div>
           )}
 
-          {/* Three Special Photo Balloons with Different Captions - Faster Animation */}
+          {/* Three Special Photo Balloons with Real Photos - Faster Animation */}
           {showPhotoBalloons && (
             <>
               {/* First Photo Balloon */}
               <div className="special-photo-balloon balloon-1 fast-balloons">
                 <div className="photo-balloon-container">
                   <div className="photo-circle">
-                    <div className="placeholder-photo">📸</div>
+                    <img 
+                      src="/487992670_9723233334364282_1946499016077339663_n.jpg" 
+                      alt="Chuiya photo 1" 
+                      className="photo-image"
+                    />
                     <div className="photo-glow"></div>
                   </div>
                   <div className="photo-caption">Chotti Bacchi ho kya ....</div>
@@ -866,7 +871,11 @@ function App() {
               <div className="special-photo-balloon balloon-2 fast-balloons">
                 <div className="photo-balloon-container">
                   <div className="photo-circle">
-                    <div className="placeholder-photo">📸</div>
+                    <img 
+                      src="/510256706_1257317949278816_7165218831931926083_n.jpg" 
+                      alt="Chuiya photo 2" 
+                      className="photo-image"
+                    />
                     <div className="photo-glow"></div>
                   </div>
                   <div className="photo-caption">Beauty in wisdom</div>
@@ -883,7 +892,11 @@ function App() {
               <div className="special-photo-balloon balloon-3 fast-balloons">
                 <div className="photo-balloon-container">
                   <div className="photo-circle">
-                    <div className="placeholder-photo">📸</div>
+                    <img 
+                      src="/510985544_1948464212590464_659434233230012205_n.jpg" 
+                      alt="Chuiya photo 3" 
+                      className="photo-image"
+                    />
                     <div className="photo-glow"></div>
                   </div>
                   <div className="photo-caption">Baar Baar hmm bolne wali</div>
