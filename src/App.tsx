@@ -60,14 +60,21 @@ function App() {
   // Initialize audio
   useEffect(() => {
     // Create audio elements
-    countdownAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/clock-ticking-3.wav');
-    ratEntranceAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/magic-chime-02.wav');
-    curtainOpenAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/ta-da.wav');
-    birthdayMusicRef.current = new Audio('https://www.soundjay.com/misc/sounds/happy-birthday-song.wav');
-    blowCandlesAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/blow-candles.wav');
-    glitchAudioRef.current = new Audio('https://www.soundjay.com/misc/sounds/static-noise.wav');
+    countdownAudioRef.current = new Audio();
+    ratEntranceAudioRef.current = new Audio();
+    curtainOpenAudioRef.current = new Audio();
+    birthdayMusicRef.current = new Audio();
+    blowCandlesAudioRef.current = new Audio();
+    glitchAudioRef.current = new Audio();
 
-    // Set audio properties
+    // Set audio sources - using a popular Happy Birthday song
+    if (birthdayMusicRef.current) {
+      birthdayMusicRef.current.src = 'https://www.soundjay.com/misc/sounds/happy-birthday-song.wav';
+      birthdayMusicRef.current.volume = 0.5;
+      birthdayMusicRef.current.loop = true;
+    }
+
+    // Set other audio properties
     if (countdownAudioRef.current) {
       countdownAudioRef.current.volume = 0.6;
       countdownAudioRef.current.loop = true;
@@ -77,10 +84,6 @@ function App() {
     }
     if (curtainOpenAudioRef.current) {
       curtainOpenAudioRef.current.volume = 0.8;
-    }
-    if (birthdayMusicRef.current) {
-      birthdayMusicRef.current.volume = 0.5;
-      birthdayMusicRef.current.loop = true;
     }
     if (blowCandlesAudioRef.current) {
       blowCandlesAudioRef.current.volume = 0.7;
@@ -485,12 +488,6 @@ function App() {
           setTimeout(() => {
             setShowClickHint(true);
           }, 3000);
-          // Play birthday music
-          if (birthdayMusicRef.current) {
-            birthdayMusicRef.current.play().catch(() => {
-              console.log('Audio play failed');
-            });
-          }
         }, 4000);
       }, 1000);
     }, 2000);
@@ -500,6 +497,13 @@ function App() {
     if (!giftOpened) {
       setGiftOpened(true);
       setShowClickHint(false);
+      
+      // Play birthday music
+      if (birthdayMusicRef.current) {
+        birthdayMusicRef.current.play().catch(() => {
+          console.log('Audio play failed');
+        });
+      }
       
       // Directly transform to birthday scene without intermediate state
       setStage('birthday');
@@ -842,14 +846,18 @@ function App() {
             </div>
           )}
 
-          {/* Three Special Photo Balloons with Different Captions - Faster Animation */}
+          {/* Three Special Photo Balloons with Real Photos - Faster Animation */}
           {showPhotoBalloons && (
             <>
               {/* First Photo Balloon */}
               <div className="special-photo-balloon balloon-1 fast-balloons">
                 <div className="photo-balloon-container">
                   <div className="photo-circle">
-                    <div className="placeholder-photo">📸</div>
+                    <img 
+                      src="/487992670_9723233334364282_1946499016077339663_n.jpg" 
+                      alt="Chuiya photo 1" 
+                      className="real-photo"
+                    />
                     <div className="photo-glow"></div>
                   </div>
                   <div className="photo-caption">Chotti Bacchi ho kya ....</div>
@@ -866,7 +874,11 @@ function App() {
               <div className="special-photo-balloon balloon-2 fast-balloons">
                 <div className="photo-balloon-container">
                   <div className="photo-circle">
-                    <div className="placeholder-photo">📸</div>
+                    <img 
+                      src="/510256706_1257317949278816_7165218831931926083_n.jpg" 
+                      alt="Chuiya photo 2" 
+                      className="real-photo"
+                    />
                     <div className="photo-glow"></div>
                   </div>
                   <div className="photo-caption">Beauty in wisdom</div>
@@ -883,7 +895,11 @@ function App() {
               <div className="special-photo-balloon balloon-3 fast-balloons">
                 <div className="photo-balloon-container">
                   <div className="photo-circle">
-                    <div className="placeholder-photo">📸</div>
+                    <img 
+                      src="/510985544_1948464212590464_659434233230012205_n.jpg" 
+                      alt="Chuiya photo 3" 
+                      className="real-photo"
+                    />
                     <div className="photo-glow"></div>
                   </div>
                   <div className="photo-caption">Baar Baar hmm bolne wali</div>
